@@ -1,0 +1,58 @@
+<style>
+    @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+        h1 {
+            font-size: 63px;
+        }
+
+        p {
+            font-size: 40px;
+        }
+
+        .btn {
+            font-size: 38px;
+        }
+    }
+
+    .modal .modal-dialog {
+        width: 800px;
+        max-width: 100%;
+    }
+
+    .modal-content {
+        text-align: center;
+        border-radius: 0px;
+        padding: 50px;
+    }
+
+    p {
+        margin-top: 25px;
+    }
+
+    .btn {
+        width: 100%;
+        margin: auto;
+    }
+
+    .footer {
+        padding: 0 180px;
+    }
+</style>
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#myModal').modal('show');
+    });
+</script>
+
+<div class="modal" id="myModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h1>{{title}}</h1>
+                <p>{{subtitle}}</p>
+                <p>{{message}}</p>
+            </div>
+            {{!-- <div class="footer"> <button type="button" class="btn btn-danger">Fermer</button>
+            </div> --}}
+        </div>
+    </div>
+</div>
