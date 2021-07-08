@@ -1,4 +1,3 @@
-// @ts-nocheck
 const Users = require("../models/userModel");
 var generator = require("generate-password");
 const bcrypt = require("bcrypt");
@@ -12,30 +11,30 @@ var smtpTransport = nodemailer.createTransport({
     pass: "8:2N^sa2X",
   },
 });
-var link;
+// var link;
 
-const sendemail2 = (req, rand, receiverEmail) => {
-  host = req.get("host");
-  link = "https://" + req.get("host") + "/auth/registerconfirm?rand=" + rand;
+// const sendemail2 = (req, rand, receiverEmail) => {
+//   host = req.get("host");
+//   link = "https://" + req.get("host") + "/auth/registerconfirm?rand=" + rand;
 
-  var mailOptions = {
-    from: "dev@novatrices.tech",
-    to: receiverEmail,
-    subject: "Confirmation de compte",
-    html:
-      "Bonjour,<br> Vous venez de vous inscrire à GMS Auto Center. Veuillez suivre ce lien pour confirmer votre adresse e-mail.<br><a href=" +
-      link +
-      ">Verifiez votre adresse e-mail.</a> <br/><br/> Merci. <br/>GMS Auto Center",
-  };
-  console.log(mailOptions);
-  smtpTransport.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
-};
+//   var mailOptions = {
+//     from: "dev@novatrices.tech",
+//     to: receiverEmail,
+//     subject: "Confirmation de compte",
+//     html:
+//       "Bonjour,<br> Vous venez de vous inscrire à GMS Auto Center. Veuillez suivre ce lien pour confirmer votre adresse e-mail.<br><a href=" +
+//       link +
+//       ">Verifiez votre adresse e-mail.</a> <br/><br/> Merci. <br/>GMS Auto Center",
+//   };
+//   console.log(mailOptions);
+//   smtpTransport.sendMail(mailOptions, function (error, info) {
+//     if (error) {
+//       console.log(error);
+//     } else {
+//       console.log("Email sent: " + info.response);
+//     }
+//   });
+// };
 
 const sendemail = (receiver, subject, html) => {
   var mailOptions = {
@@ -72,7 +71,6 @@ const authController = {
         email: email,
         phone: phone,
         password: passwordHash,
-        email: email,
         ville: ville,
         departement: departement,
         adresse: adresse,
@@ -174,7 +172,7 @@ const authController = {
           "</p> <p>Mot de passe: " +
           newpassword +
           "</p><br>Vous pouvez modifier ce mot de passe dans votre profil.<br><br> À bientôt, <br><br>`L'équipe GMS Auto Center ";
-        sendemail(receiver, subject, html);
+        // sendemail(receiver, subject, html);
         return res.status(200).send({
           status: 200,
           message: `Mot de passe a été mis à jour`,
