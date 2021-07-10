@@ -58,7 +58,7 @@ var bcrypt = require('bcryptjs');
 const authController = {
   register: async (req, res) => {
     try {
-      const { firstname, lastname, email, phone, password, ville, departement, adresse, profil } = req.body;
+      const { firstname, lastname, email, phone, password, ville, departement, adresse, profil, mobilite, siret } = req.body;
       const user = await Users.findOne({ email: email });
       if (user)
         return res.status(400).json({
@@ -79,6 +79,8 @@ const authController = {
         departement: departement,
         adresse: adresse,
         profil: profil,
+        mobilite: mobilite,
+        siret: siret,
         rand: rand,
         status: false,
       });

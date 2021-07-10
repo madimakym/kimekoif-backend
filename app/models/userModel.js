@@ -28,6 +28,12 @@ const UserSchema = new mongoose.Schema(
     adresse: {
       type: String,
     },
+    siret: {
+      type: String,
+    },
+    mobilite: {
+      type: String,
+    },
     profil: {
       type: String,
     },
