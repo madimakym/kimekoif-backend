@@ -192,52 +192,52 @@ const authController = {
   //   }
   // },
 
-  // resetPassword: async (req, res) => {
-  //   try {
-  //     const { id, password, newpassword } = req.body;
-  //     const user = await Users.findById(id);
+  changePassword: async (req, res) => {
+    try {
+      const { id, password, newpassword } = req.body;
+      const user = await Users.findById(id);
 
-  //     const isMatch = await bcrypt.compare(password, user.password);
-  //     if (!isMatch)
-  //       return res.status(400).send({
-  //         status: 400,
-  //         message: "Mot de passe incorrect",
-  //       });
-  //     else {
-  //       const isMatch = await bcrypt.compare(newpassword, user.password);
-  //       if (isMatch)
-  //         return res.status(400).send({
-  //           status: 400,
-  //           message:
-  //             "Désolé, le nouveau mot de passe doit être différent de l'ancien",
-  //         });
-  //       else {
-  //         const passwordHash = await bcrypt.hash(newpassword, 10);
-  //         const user = await Users.findByIdAndUpdate(
-  //           id,
-  //           { password: passwordHash },
-  //           {
-  //             useFindAndModify: false,
-  //           }
-  //         );
-  //         if (!user) {
-  //           return res.status(400).send({
-  //             status: 400,
-  //             message: `Cannot update user with id=${id}. Maybe Contact was not found!`,
-  //           });
-  //         } else
-  //           return res.status(200).send({
-  //             message: `Mot de passe a été mis à jour`,
-  //           });
-  //       }
-  //     }
-  //   } catch (err) {
-  //     return res.status(500).send({
-  //       status: 500,
-  //       message: err.message,
-  //     });
-  //   }
-  // },
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch)
+        return res.status(400).send({
+          status: 400,
+          message: "Mot de passe incorrect",
+        });
+      else {
+        const isMatch = await bcrypt.compare(newpassword, user.password);
+        if (isMatch)
+          return res.status(400).send({
+            status: 400,
+            message:
+              "Désolé, le nouveau mot de passe doit être différent de l'ancien",
+          });
+        else {
+          const passwordHash = await bcrypt.hash(newpassword, 10);
+          const user = await Users.findByIdAndUpdate(
+            id,
+            { password: passwordHash },
+            {
+              useFindAndModify: false,
+            }
+          );
+          if (!user) {
+            return res.status(400).send({
+              status: 400,
+              message: `Cannot update user with id=${id}. Maybe Contact was not found!`,
+            });
+          } else
+            return res.status(200).send({
+              message: `Mot de passe a été mis à jour`,
+            });
+        }
+      }
+    } catch (err) {
+      return res.status(500).send({
+        status: 500,
+        message: err.message,
+      });
+    }
+  },
 
   // verifiedToken: (req, res) => {
   //   try {

@@ -41,7 +41,7 @@ const userCtrl = {
 
     update: async (req, res) => {
         const id = req.params.id;
-        const { firstname, lastname, phone, ville, departement, adresse, profil, mobilite, siret } = req.body;
+        const { firstname, lastname, phone, ville, departement, adresse, profil, mobilite, siret, avatar } = req.body;
         try {
             const data = {
                 firstname: firstname,
@@ -52,7 +52,8 @@ const userCtrl = {
                 adresse: adresse,
                 profil: profil,
                 mobilite: mobilite,
-                siret: siret
+                siret: siret,
+                avatar: avatar
             };
 
             await User.findByIdAndUpdate(id, data, {

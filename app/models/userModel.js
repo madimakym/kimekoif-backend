@@ -5,7 +5,6 @@ const UserSchema = new mongoose.Schema(
     firstname: {
       type: String,
     },
-
     lastname: {
       type: String,
     },
@@ -35,6 +34,9 @@ const UserSchema = new mongoose.Schema(
       type: String,
     },
     profil: {
+      type: String,
+    },
+    avatar: {
       type: String,
     },
     rand: {
