@@ -17,7 +17,7 @@ module.exports = (app) => {
   router.put("/user/:id", user.update);
 
   router.post("/album", album.create);
-  router.get("/album", album.findAll);
+  router.post("/user/album/", album.findByUser);
   router.get("/album/:id", album.findOne);
   router.put("/album/:id", album.update);
   router.delete("/album/:id", album.delete);

@@ -13,7 +13,7 @@ const AlbumCtrl = {
             await album.save();
             return res.status(200).json({
                 status: 200,
-                message: "Album created!",
+                message: "Image ajoutée",
             });
         } catch (err) {
             return res.status(500).json({
@@ -23,20 +23,16 @@ const AlbumCtrl = {
         }
     },
 
-    findAll: async (_req, res) => {
+    findByUser: async (req, res) => {
         try {
-            const response = await Album.find().populate({
-                path: "users",
-                populate: {
-                    path: "users",
-                    model: "Users",
-                },
-            });
-            return res.status(200).json(response);
+            const user = await Album.find({
+                $or: [{ libelle: req.body.libelle, users: req.body.users }],
+            }).sort({ createdAt: "desc" });
+            return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
                 status: 500,
-                message: error.message,
+                message: "Aucun resultat"
             });
         }
     },
@@ -60,7 +56,7 @@ const AlbumCtrl = {
             await Album.findByIdAndRemove(id);
             return res.status(200).json({
                 status: 200,
-                message: "Album supprimé",
+                message: "Image supprimée",
             });
         } catch (error) {
             return res.status(500).json({ message: error.message });

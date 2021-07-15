@@ -41,7 +41,7 @@ const userCtrl = {
 
     update: async (req, res) => {
         const id = req.params.id;
-        const { firstname, lastname, phone, ville, departement, adresse, profil, mobilite, siret, avatar } = req.body;
+        const { firstname, lastname, phone, ville, departement, adresse, mobilite, siret, avatar, description } = req.body;
         try {
             const data = {
                 firstname: firstname,
@@ -50,9 +50,9 @@ const userCtrl = {
                 ville: ville,
                 departement: departement,
                 adresse: adresse,
-                profil: profil,
                 mobilite: mobilite,
                 siret: siret,
+                description: description,
                 avatar: avatar
             };
 

@@ -41,6 +41,9 @@ const UserSchema = new mongoose.Schema(
     rand: {
       type: String,
     },
+    description: {
+      type: String,
+    },
     status: {
       type: Boolean,
     }
