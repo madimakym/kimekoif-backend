@@ -3,6 +3,7 @@ module.exports = (app) => {
   const user = require("../controllers/userController");
   const upload = require("../controllers/uploadfileController");
   const album = require("../controllers/albumController");
+  const service = require("../controllers/serviceController");
   var router = require("express").Router();
 
   // router.post("/auth/resetpassword", auth.resetPassword);
@@ -15,6 +16,11 @@ module.exports = (app) => {
   router.get("/user", user.findAll);
   router.get("/user/:id", user.findOne);
   router.put("/user/:id", user.update);
+
+  router.post("/service", service.create);
+  router.post("/user/service/", service.findByUser);
+  router.get("/service/:id", service.findOne);
+  router.delete("/service/:id", service.delete);
 
   router.post("/album", album.create);
   router.post("/user/album/", album.findByUser);
