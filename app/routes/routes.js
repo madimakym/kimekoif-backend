@@ -4,6 +4,7 @@ module.exports = (app) => {
   const upload = require("../controllers/uploadfileController");
   const album = require("../controllers/albumController");
   const service = require("../controllers/serviceController");
+  const disponibilite = require("../controllers/disponibiliteController");
   var router = require("express").Router();
 
   // router.post("/auth/resetpassword", auth.resetPassword);
@@ -21,6 +22,11 @@ module.exports = (app) => {
   router.post("/user/service/", service.findByUser);
   router.get("/service/:id", service.findOne);
   router.delete("/service/:id", service.delete);
+
+  router.post("/disponibilite", disponibilite.create);
+  router.post("/user/disponibilite/", disponibilite.findByUser);
+  router.get("/disponibilite/:id", disponibilite.findOne);
+  router.delete("/disponibilite/:id", disponibilite.delete);
 
   router.post("/album", album.create);
   router.post("/user/album/", album.findByUser);
