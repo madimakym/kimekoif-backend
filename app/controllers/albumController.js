@@ -1,5 +1,5 @@
 // @ts-nocheck
-const Album = require("../models/album");
+const Album = require("../models/album-model");
 
 const AlbumCtrl = {
     create: async (req, res) => {

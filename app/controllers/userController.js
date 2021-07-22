@@ -92,22 +92,38 @@ const userCtrl = {
         const date = req.body.data;
         try {
             const data = await User.find()
-                .populate({
-                    path: "services",
-                    populate: {
+                .populate([{
                         path: "services",
-                        model: "Service",
+                        populate: {
+                            path: "services",
+                            model: "Service",
+                        },
                     },
-                })
-            if (service) {
-                const response = _.filter(data, user => ((user.ville === ville) && (user.services?.libelle === service)));
-                console.log("service", service)
-                return res.status(200).json(response);
-            } else {
-                const response = _.filter(data, user => user.ville === ville);
-                console.log("ville", ville)
-                return res.status(200).json(response);
-            }
+                    {
+                        path: "disponibilites",
+                        populate: {
+                            path: "disponibilites",
+                            model: "Disponibilite",
+                        },
+                    },
+                ])
+            // if (service) {
+            //     const response = _.filter(data, user => ((user.ville === ville) && (user.services?.libelle === service)));
+            //     console.log("service", service)
+            //     return res.status(200).json(response);
+            // }
+            // if (date) {
+            //     const response = _.filter(data, user => ((user.ville === ville) && (user.services?.libelle === service)));
+            //     console.log("service", service)
+            //     return res.status(200).json(response);
+            // }
+            // else {
+            //     const response = _.filter(data, user => user.ville === ville);
+            //     console.log("ville", ville)
+            //     return res.status(200).json(response);
+            // }
+            return res.status(200).json(data);
+
         } catch (error) {
             return res.status(500).json({
                 status: 500,

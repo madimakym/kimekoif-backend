@@ -4,29 +4,24 @@ const User = require("../models/user-model");
 
 const ServiceCtrl = {
     create: async (req, res) => {
+        const body = req.body
         try {
-            const service = {
-                libelle: req.body.libelle,
-                price: req.body.price,
-                description: req.body.description,
-                users: req.body.users,
-                status: req.body.status ? req.body.status : true
-            };
-            const response = await Service.create(service)
-            try {
-                await User.findByIdAndUpdate(req.body.users, {
-                    services: response._id
-                });
-                return res.status(200).json({
-                    status: 200,
-                    message: "Service ajouté",
-                })
-            } catch (err) {
-                return res.status(500).json({
-                    status: 500,
-                    message: err.message,
-                });
-            }
+            const user = await User.findById(body.users)
+            const service = new Service({
+                libelle: body.libelle,
+                price: body.price,
+                description: body.description,
+                users: body.users,
+                status: body.status ? body.status : true
+            });
+
+            const savedService = await service.save();
+            user.services = user.services.concat(savedService);
+            await user.save()
+            return res.status(200).json({
+                status: 200,
+                message: "Service ajouté",
+            })
         } catch (err) {
             return res.status(500).json({
                 status: 500,

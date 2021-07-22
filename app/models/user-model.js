@@ -46,14 +46,14 @@ const UserSchema = new mongoose.Schema({
   status: {
     type: Boolean,
   },
-  disponibilites: {
+  disponibilites: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Disponibilites'
-  },
-  services: {
+    ref: 'Disponibilite'
+  }],
+  services: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Service'
-  },
+  }],
 }, {
   timestamps: true,
 });

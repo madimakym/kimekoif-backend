@@ -1,21 +1,26 @@
 // @ts-nocheck
-const Disponibilite = require("../models/disponibilite");
+const Disponibilite = require("../models/disponibilite-model");
+const User = require("../models/user-model");
 
 const DisponibiliteCtrl = {
     create: async (req, res) => {
+        const body = req.body
         try {
+            const user = await User.findById(body.users)
             const disponibilite = new Disponibilite({
-                description: req.body.description,
-                users: req.body.users,
-                start: req.body.start,
-                end: req.body.end,
-                status: req.body.status ? req.body.status : true
+                description: body.description,
+                users: body.users,
+                start: body.start,
+                end: body.end,
+                status: body.status ? body.status : true
             });
-            await disponibilite.save();
+            const savedDisponibilite = await disponibilite.save();
+            user.disponibilites = user.disponibilites.concat(savedDisponibilite);
+            await user.save()
             return res.status(200).json({
                 status: 200,
                 message: "Date ajoutée",
-            });
+            })
         } catch (err) {
             return res.status(500).json({
                 status: 500,
@@ -27,8 +32,12 @@ const DisponibiliteCtrl = {
     findByUser: async (req, res) => {
         try {
             const user = await Disponibilite.find({
-                $or: [{ users: req.body.users }],
-            }).sort({ createdAt: "desc" });
+                $or: [{
+                    users: req.body.users
+                }],
+            }).sort({
+                createdAt: "desc"
+            });
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -60,7 +69,9 @@ const DisponibiliteCtrl = {
                 message: "Date supprimée",
             });
         } catch (error) {
-            return res.status(500).json({ message: error.message });
+            return res.status(500).json({
+                message: error.message
+            });
         }
     }
 };
