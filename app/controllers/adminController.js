@@ -53,7 +53,7 @@ const adminController = {
   //         path: "users",
   //         model: "Users",
   //       },
-  //     })
+      // })
   //     .exec(function (err, data) {
   //       if (err) {
   //         console.log(err);

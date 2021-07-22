@@ -1,4 +1,4 @@
-const Users = require("../models/userModel");
+const Users = require("../models/user-model");
 // var generator = require("generate-password");
 // const bcrypt = require("bcrypt");
 var bcrypt = require('bcryptjs');

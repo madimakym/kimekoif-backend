@@ -1,21 +1,32 @@
 // @ts-nocheck
-const Service = require("../models/service");
+const Service = require("../models/service-model");
+const User = require("../models/user-model");
 
 const ServiceCtrl = {
     create: async (req, res) => {
         try {
-            const service = new Service({
+            const service = {
                 libelle: req.body.libelle,
                 price: req.body.price,
                 description: req.body.description,
                 users: req.body.users,
                 status: req.body.status ? req.body.status : true
-            });
-            await service.save();
-            return res.status(200).json({
-                status: 200,
-                message: "Service ajouté",
-            });
+            };
+            const response = await Service.create(service)
+            try {
+                await User.findByIdAndUpdate(req.body.users, {
+                    services: response._id
+                });
+                return res.status(200).json({
+                    status: 200,
+                    message: "Service ajouté",
+                })
+            } catch (err) {
+                return res.status(500).json({
+                    status: 500,
+                    message: err.message,
+                });
+            }
         } catch (err) {
             return res.status(500).json({
                 status: 500,
@@ -27,8 +38,12 @@ const ServiceCtrl = {
     findByUser: async (req, res) => {
         try {
             const user = await Service.find({
-                $or: [{ users: req.body.users }],
-            }).sort({ createdAt: "desc" });
+                $or: [{
+                    users: req.body.users
+                }],
+            }).sort({
+                createdAt: "desc"
+            });
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -60,7 +75,9 @@ const ServiceCtrl = {
                 message: "Service supprimé",
             });
         } catch (error) {
-            return res.status(500).json({ message: error.message });
+            return res.status(500).json({
+                message: error.message
+            });
         }
     }
 };

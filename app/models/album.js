@@ -26,4 +26,4 @@ AlbumSchema.method("toJSON", function () {
   return object;
 });
 
-module.exports = mongoose.model("Albums", AlbumSchema);
+module.exports = mongoose.model("Album", AlbumSchema);

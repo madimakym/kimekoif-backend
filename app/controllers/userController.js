@@ -1,9 +1,12 @@
-const User = require("../models/userModel");
+const User = require("../models/user-model");
+var _ = require('lodash');
 
 const userCtrl = {
     findAll: async (_req, res) => {
         try {
-            const response = await User.find().sort({ createdAt: "desc" });
+            const response = await User.find().sort({
+                createdAt: "desc"
+            });
             return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({
@@ -35,13 +38,26 @@ const userCtrl = {
                 message: "User deleted",
             });
         } catch (err) {
-            return res.status(500).json({ message: err.message });
+            return res.status(500).json({
+                message: err.message
+            });
         }
     },
 
     update: async (req, res) => {
         const id = req.params.id;
-        const { firstname, lastname, phone, ville, departement, adresse, mobilite, siret, avatar, description } = req.body;
+        const {
+            firstname,
+            lastname,
+            phone,
+            ville,
+            departement,
+            adresse,
+            mobilite,
+            siret,
+            avatar,
+            description
+        } = req.body;
         try {
             const data = {
                 firstname: firstname,
@@ -64,17 +80,34 @@ const userCtrl = {
                 message: "User updated",
             });
         } catch (err) {
-            return res.status(500).json({ message: err.message });
+            return res.status(500).json({
+                message: err.message
+            });
         }
     },
 
     findby: async (req, res) => {
-        const key = req.params.category;
+        const ville = req.body.ville;
+        const service = req.body.service;
+        const date = req.body.data;
         try {
-            const user = await User.find({
-                $or: [{ libelle: { $regex: new RegExp(key, "i") } }],
-            }).sort({ createdAt: "desc" });
-            return res.status(200).json(user);
+            const data = await User.find()
+                .populate({
+                    path: "services",
+                    populate: {
+                        path: "services",
+                        model: "Service",
+                    },
+                })
+            if (service) {
+                const response = _.filter(data, user => ((user.ville === ville) && (user.services?.libelle === service)));
+                console.log("service", service)
+                return res.status(200).json(response);
+            } else {
+                const response = _.filter(data, user => user.ville === ville);
+                console.log("ville", ville)
+                return res.status(200).json(response);
+            }
         } catch (error) {
             return res.status(500).json({
                 status: 500,
