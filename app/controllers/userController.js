@@ -87,15 +87,18 @@ const userCtrl = {
     },
 
     findby: async (req, res) => {
-        const ville = req.body.ville;
-        const service = req.body.service;
-        const date = req.body.data;
+        const body = req.body
         try {
             const data = await User.find()
                 .populate([{
                         path: "services",
                         populate: {
                             path: "services",
+                            match: [{
+                                libelle: {
+                                    $gte: 'Nattes'
+                                }
+                            }],
                             model: "Service",
                         },
                     },
@@ -107,22 +110,25 @@ const userCtrl = {
                         },
                     },
                 ])
-            // if (service) {
-            //     const response = _.filter(data, user => ((user.ville === ville) && (user.services?.libelle === service)));
-            //     console.log("service", service)
-            //     return res.status(200).json(response);
-            // }
-            // if (date) {
-            //     const response = _.filter(data, user => ((user.ville === ville) && (user.services?.libelle === service)));
-            //     console.log("service", service)
-            //     return res.status(200).json(response);
-            // }
-            // else {
-            //     const response = _.filter(data, user => user.ville === ville);
-            //     console.log("ville", ville)
-            //     return res.status(200).json(response);
-            // }
-            return res.status(200).json(data);
+
+            const response = _.filter(data, user => ((user.ville === body.ville) && (user.profil === "professional")));
+
+            if ((body.service) && (body.date === "")) {
+                let resService = response.filter(cl => cl.services.some(r => r.libelle == body.service));
+                return res.status(200).json(resService);
+            }
+
+            if ((body.date) && (body.service === "")) {
+                let resDisponibilite = response.filter(cl => cl.disponibilites.some(r => r.start == body.date));
+                return res.status(200).json(resDisponibilite);
+            }
+            if (body.service && body.date) {
+                let resService = response.filter(cl => cl.services.some(r => r.libelle == body.service));
+                let resDisponibilite = resService.filter(cl => cl.disponibilites.some(r => r.start == body.date));
+                return res.status(200).json(resDisponibilite);
+            } else {
+                return res.status(200).json(response);
+            }
 
         } catch (error) {
             return res.status(500).json({
