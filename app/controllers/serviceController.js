@@ -1,6 +1,7 @@
 // @ts-nocheck
 const Service = require("../models/service-model");
 const User = require("../models/user-model");
+var _ = require('lodash');
 
 const ServiceCtrl = {
     create: async (req, res) => {
@@ -40,6 +41,45 @@ const ServiceCtrl = {
                 createdAt: "desc"
             });
             return res.status(200).json(user);
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: "Aucun resultat"
+            });
+        }
+    },
+
+    search: async (req, res) => {
+        const body = req.body
+        try {
+            const data = await Service.find().populate([{
+                path: "users",
+                model: "Users",
+                populate: {
+                    path: "disponibilites",
+                    model: "Disponibilite",
+                    select: 'start'
+                }
+            }, ])
+
+            const response = _.filter(data, cl => (cl.users.ville === body.ville));
+
+            if ((body.service) && (body.date === "")) {
+                const resService = _.filter(response, ser => (ser.libelle === body.service));
+                return res.status(200).json(resService);
+            }
+            if ((body.date) && (body.service === "")) {
+                let resDisponibilite = response.filter(ser => ser.users.disponibilites.some(r => r.start == body.date));
+                return res.status(200).json(resDisponibilite);
+            }
+            if (body.service && body.date) {
+                const resService = _.filter(response, ser => (ser.libelle === body.service));
+                let resDisponibilite = resService.filter(ser => ser.users.disponibilites.some(r => r.start == body.date));
+                return res.status(200).json(resDisponibilite);
+            } else {
+                return res.status(200).json(response);
+            }
+
         } catch (error) {
             return res.status(500).json({
                 status: 500,

@@ -19,7 +19,21 @@ const userCtrl = {
     findOne: async (req, res) => {
         try {
             const id = req.params.id;
-            const response = await User.findById(id);
+            const response = await User.findById(id).populate([{
+                    path: "services",
+                    populate: {
+                        path: "services",
+                        model: "Service",
+                    },
+                },
+                {
+                    path: "disponibilites",
+                    populate: {
+                        path: "disponibilites",
+                        model: "Disponibilite",
+                    },
+                },
+            ]);
             return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({
@@ -86,56 +100,56 @@ const userCtrl = {
         }
     },
 
-    findby: async (req, res) => {
-        const body = req.body
-        try {
-            const data = await User.find()
-                .populate([{
-                        path: "services",
-                        populate: {
-                            path: "services",
-                            match: [{
-                                libelle: {
-                                    $gte: 'Nattes'
-                                }
-                            }],
-                            model: "Service",
-                        },
-                    },
-                    {
-                        path: "disponibilites",
-                        populate: {
-                            path: "disponibilites",
-                            model: "Disponibilite",
-                        },
-                    },
-                ])
+    // findby: async (req, res) => {
+    //     const body = req.body
+    //     try {
+    //         const data = await User.find()
+    // .populate([{
+    //         path: "services",
+    //         populate: {
+    //             path: "services",
+    //             match: [{
+    //                 libelle: {
+    //                     $gte: 'Nattes'
+    //                 }
+    //             }],
+    //             model: "Service",
+    //         },
+    //     },
+    //     {
+    //         path: "disponibilites",
+    //         populate: {
+    //             path: "disponibilites",
+    //             model: "Disponibilite",
+    //         },
+    //     },
+    // ])
 
-            const response = _.filter(data, user => ((user.ville === body.ville) && (user.profil === "professional")));
+    //         const response = _.filter(data, user => ((user.ville === body.ville) && (user.profil === "professional")));
 
-            if ((body.service) && (body.date === "")) {
-                let resService = response.filter(cl => cl.services.some(r => r.libelle == body.service));
-                return res.status(200).json(resService);
-            }
+    //         if ((body.service) && (body.date === "")) {
+    //             let resService = response.filter(cl => cl.services.some(r => r.libelle == body.service));
+    //             return res.status(200).json(resService);
+    //         }
 
-            if ((body.date) && (body.service === "")) {
-                let resDisponibilite = response.filter(cl => cl.disponibilites.some(r => r.start == body.date));
-                return res.status(200).json(resDisponibilite);
-            }
-            if (body.service && body.date) {
-                let resService = response.filter(cl => cl.services.some(r => r.libelle == body.service));
-                let resDisponibilite = resService.filter(cl => cl.disponibilites.some(r => r.start == body.date));
-                return res.status(200).json(resDisponibilite);
-            } else {
-                return res.status(200).json(response);
-            }
+    //         if ((body.date) && (body.service === "")) {
+    //             let resDisponibilite = response.filter(cl => cl.disponibilites.some(r => r.start == body.date));
+    //             return res.status(200).json(resDisponibilite);
+    //         }
+    //         if (body.service && body.date) {
+    //             let resService = response.filter(cl => cl.services.some(r => r.libelle == body.service));
+    //             let resDisponibilite = resService.filter(cl => cl.disponibilites.some(r => r.start == body.date));
+    //             return res.status(200).json(resDisponibilite);
+    //         } else {
+    //             return res.status(200).json(response);
+    //         }
 
-        } catch (error) {
-            return res.status(500).json({
-                status: 500,
-                message: error.message,
-            });
-        }
-    },
+    //     } catch (error) {
+    //         return res.status(500).json({
+    //             status: 500,
+    //             message: error.message,
+    //         });
+    //     }
+    // },
 };
 module.exports = userCtrl;

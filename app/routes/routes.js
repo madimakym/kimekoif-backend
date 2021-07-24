@@ -17,13 +17,13 @@ module.exports = (app) => {
   router.get("/user", user.findAll);
   router.get("/user/:id", user.findOne);
   router.put("/user/:id", user.update);
-  router.post("/user/search", user.findby);
-
 
   router.post("/service", service.create);
   router.post("/user/service/", service.findByUser);
   router.get("/service/:id", service.findOne);
   router.delete("/service/:id", service.delete);
+  router.post("/service/search", service.search);
+
 
   router.post("/disponibilite", disponibilite.create);
   router.post("/user/disponibilite/", disponibilite.findByUser);
