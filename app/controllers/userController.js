@@ -33,7 +33,24 @@ const userCtrl = {
                         model: "Disponibilite",
                     },
                 },
+                {
+                    path: "albums",
+                    populate: {
+                        path: "albums",
+                        model: "Album",
+                    },
+                },
             ]);
+
+            // var group_data = _(response.albums)
+            // .groupBy('libelle')
+            // .map(function (items, bdate) {
+            //     return {
+            //         libelle: bdate,
+            //         visual: _.map(items, 'visual')
+            //     };
+            // }).value();
+            // return res.status(200).json(group_data);
             return res.status(200).json(response);
         } catch (error) {
             return res.status(500).json({

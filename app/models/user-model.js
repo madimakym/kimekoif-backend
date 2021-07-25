@@ -54,6 +54,10 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Service'
   }],
+  albums: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Album'
+  }],
 }, {
   timestamps: true,
 });
