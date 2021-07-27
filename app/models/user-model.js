@@ -58,6 +58,10 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Album'
   }],
+  rdv: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Rdv'
+  }],
 }, {
   timestamps: true,
 });
