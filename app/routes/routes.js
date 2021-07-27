@@ -5,6 +5,7 @@ module.exports = (app) => {
   const album = require("../controllers/albumController");
   const service = require("../controllers/serviceController");
   const disponibilite = require("../controllers/disponibiliteController");
+  const checkout = require("../controllers/checkoutController");
   var router = require("express").Router();
 
   // router.post("/auth/resetpassword", auth.resetPassword);
@@ -35,6 +36,9 @@ module.exports = (app) => {
   router.get("/album/:id", album.findOne);
   router.put("/album/:id", album.update);
   router.delete("/album/:id", album.delete);
+
+
+  router.post("/stripe/charge/", checkout.payment);
 
   router.post("/upload", upload.upload);
   app.use("/api/", router);
