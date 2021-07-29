@@ -40,7 +40,7 @@ module.exports = (app) => {
 
   router.post("/rdv", rdv.create);
   router.post("/pro/rdv/", rdv.findByUser);
-  router.post("/customer/rdv/", rdv.findByUser);
+  router.post("/customer/rdv/", rdv.findByCustomer);
   // router.get("/disponibilite/:id", disponibilite.findOne);
   // router.delete("/disponibilite/:id", disponibilite.delete);
 

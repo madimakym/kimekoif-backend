@@ -36,9 +36,36 @@ const RdvCtrl = {
                 $or: [{
                     users: req.body.users
                 }],
-            }).sort({
-                createdAt: "desc"
+            }).populate([{
+                path: "users",
+                populate: {
+                    path: "users",
+                    model: "Users",
+                },
+            }, ]);
+            return res.status(200).json(user);
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: "Aucun resultat"
             });
+        }
+    },
+
+    findByCustomer: async (req, res) => {
+        try {
+            const user = await Rdv.find({
+                $or: [{
+                    customerId: req.body.customerId
+                }],
+            }).populate([{
+                path: "users",
+                select: 'lastname',
+                populate: {
+                    path: "users",
+                    model: "Users",
+                },
+            }, ]);
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
