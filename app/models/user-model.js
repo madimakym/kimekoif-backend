@@ -62,6 +62,10 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Rdv'
   }],
+  facture: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Facture'
+  }],
 }, {
   timestamps: true,
 });

@@ -131,7 +131,8 @@ const authController = {
         id: user.id,
         firstname: user.firstname,
         lastname: user.lastname,
-        profil: user.profil
+        profil: user.profil,
+        avatar:user.avatar
       });
     } catch (err) {
       return res.status(500).json({
