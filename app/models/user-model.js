@@ -66,6 +66,10 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Facture'
   }],
+  adresses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Adresse'
+  }],
 }, {
   timestamps: true,
 });
