@@ -12,8 +12,8 @@ const AdresseCtrl = {
                 professional: body.professional,
                 status: body.status ? body.status : true
             });
-            const savedAdresse = await adresse.save();
-            user.adresses = body.professional;
+            await adresse.save();
+            user.adresses = user.adresses.concat(body.professional);
             await user.save()
             return res.status(200).json({
                 status: 200,
