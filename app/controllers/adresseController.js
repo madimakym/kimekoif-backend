@@ -9,14 +9,15 @@ const AdresseCtrl = {
             const user = await User.findById(body.users)
             const adresse = new Adresse({
                 users: body.users,
+                professional: body.professional,
                 status: body.status ? body.status : true
             });
             const savedAdresse = await adresse.save();
-            user.adresses = user.adresses.concat(savedAdresse);
+            user.adresses = body.professional;
             await user.save()
             return res.status(200).json({
                 status: 200,
-                message: "Date ajoutée",
+                message: "Adresse ajoutée",
             })
         } catch (err) {
             return res.status(500).json({

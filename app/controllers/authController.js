@@ -58,8 +58,22 @@ var bcrypt = require('bcryptjs');
 const authController = {
   register: async (req, res) => {
     try {
-      const { firstname, lastname, email, phone, password, ville, departement, adresse, profil, mobilite, siret } = req.body;
-      const user = await Users.findOne({ email: email });
+      const {
+        firstname,
+        lastname,
+        email,
+        phone,
+        password,
+        ville,
+        departement,
+        adresse,
+        profil,
+        mobilite,
+        siret
+      } = req.body;
+      const user = await Users.findOne({
+        email: email
+      });
       if (user)
         return res.status(400).json({
           status: 400,
@@ -100,8 +114,13 @@ const authController = {
 
   login: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await Users.findOne({ email: email });
+      const {
+        email,
+        password
+      } = req.body;
+      const user = await Users.findOne({
+        email: email
+      });
       if (!user)
         return res.status(400).json({
           status: 400,
@@ -122,17 +141,22 @@ const authController = {
           message: "Mot de passe incorrect",
         });
 
-      const payload = { id: user._id, name: user.username };
+      const payload = {
+        id: user._id,
+        name: user.username
+      };
       // const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
       //   expiresIn: "1d",
       // });
+
 
       res.status(200).json({
         id: user.id,
         firstname: user.firstname,
         lastname: user.lastname,
         profil: user.profil,
-        avatar:user.avatar
+        avatar: user.avatar,
+        adresses: user.adresses
       });
     } catch (err) {
       return res.status(500).json({
@@ -195,7 +219,11 @@ const authController = {
 
   changePassword: async (req, res) => {
     try {
-      const { id, password, newpassword } = req.body;
+      const {
+        id,
+        password,
+        newpassword
+      } = req.body;
       const user = await Users.findById(id);
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -209,15 +237,14 @@ const authController = {
         if (isMatch)
           return res.status(400).send({
             status: 400,
-            message:
-              "Désolé, le nouveau mot de passe doit être différent de l'ancien",
+            message: "Désolé, le nouveau mot de passe doit être différent de l'ancien",
           });
         else {
           const passwordHash = await bcrypt.hash(newpassword, 10);
           const user = await Users.findByIdAndUpdate(
-            id,
-            { password: passwordHash },
-            {
+            id, {
+              password: passwordHash
+            }, {
               useFindAndModify: false,
             }
           );

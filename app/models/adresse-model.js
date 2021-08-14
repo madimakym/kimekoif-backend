@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const AdresseSchema = new mongoose.Schema({
+    professional: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
+
     users: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users"
