@@ -50,10 +50,10 @@ module.exports = (app) => {
   // router.get("/disponibilite/:id", disponibilite.findOne);
   // router.delete("/disponibilite/:id", disponibilite.delete);
 
-  router.post("/adresse", adresse.create);
+  router.post("/adresse/create/", adresse.create);
   router.post("/user/adresse/", adresse.findByUser);
   router.get("/adresse/:id", adresse.findOne);
-  router.delete("/adresse/:id", adresse.delete);
+  router.post("/adresse/delete/", adresse.delete);
 
 
   router.post("/stripe/charge/", checkout.payment);

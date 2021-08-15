@@ -6,18 +6,18 @@ const AdresseCtrl = {
     create: async (req, res) => {
         const body = req.body
         try {
-            const user = await User.findById(body.users)
-            const adresse = new Adresse({
-                users: body.users,
-                professional: body.professional,
-                status: body.status ? body.status : true
-            });
-            await adresse.save();
-            user.adresses = user.adresses.concat(body.professional);
+            const user = await User.findById(body.userId)
+            // const adresse = new Adresse({
+            //     users: body.userId,
+            //     professional: body.professionelId,
+            //     status: body.status ? body.status : true
+            // });
+            // await adresse.save();
+            user.adresses = user.adresses.concat(body.professionelId);
             await user.save()
             return res.status(200).json({
                 status: 200,
-                message: "Adresse ajoutée",
+                message: user,
             })
         } catch (err) {
             return res.status(500).json({
@@ -59,16 +59,22 @@ const AdresseCtrl = {
     },
 
     delete: async (req, res) => {
-        const id = req.params.id;
+        const body = req.body
         try {
-            await Adresse.findByIdAndRemove(id);
+            const user = await User.findById(body.userId)
+            var index = user.adresses.indexOf(body.professionelId);
+            if (index > -1) {
+                user.adresses.splice(index, 1);
+            }
+            await user.save()
             return res.status(200).json({
                 status: 200,
-                message: "Adresse supprimée",
-            });
+                message: user,
+            })
         } catch (error) {
             return res.status(500).json({
-                message: error.message
+                status: 500,
+                message: error.message,
             });
         }
     }
