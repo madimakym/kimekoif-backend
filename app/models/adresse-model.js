@@ -3,12 +3,18 @@ const mongoose = require("mongoose");
 const AdresseSchema = new mongoose.Schema({
     professional: {
         type: mongoose.Schema.Types.ObjectId,
+        unique: true,
+        required: true,
         ref: "Users"
     },
-
-    users: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
+    firstname: {
+        type: String,
+    },
+    lastname: {
+        type: String,
+    },
+    ville: {
+        type: String,
     },
     status: {
         type: Boolean

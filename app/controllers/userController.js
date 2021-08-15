@@ -40,13 +40,13 @@ const userCtrl = {
                         model: "Album",
                     },
                 },
-                // {
-                //     path: "adresses",
-                //     populate: {
-                //         path: "adresses",
-                //         model: "Adresse",
-                //     },
-                // }
+                {
+                    path: "adresses",
+                    populate: {
+                        path: "adresses",
+                        model: "Adresse",
+                    },
+                }
             ]);
 
             // var group_data = _(response.albums)

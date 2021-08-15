@@ -7,13 +7,17 @@ const AdresseCtrl = {
         const body = req.body
         try {
             const user = await User.findById(body.userId)
-            // const adresse = new Adresse({
-            //     users: body.userId,
-            //     professional: body.professionelId,
-            //     status: body.status ? body.status : true
-            // });
-            // await adresse.save();
-            user.adresses = user.adresses.concat(body.professionelId);
+            const adresse = new Adresse({
+                professional: body.professionelId,
+                firstname: body.firstname,
+                lastname: body.lastname,
+                avatar: body.avatar,
+                ville: body.ville,
+                status: body.status ? body.status : true
+            });
+
+            const savedAdresse = await adresse.save();
+            user.adresses = user.adresses.concat(savedAdresse);
             await user.save()
             return res.status(200).json({
                 status: 200,
@@ -62,11 +66,18 @@ const AdresseCtrl = {
         const body = req.body
         try {
             const user = await User.findById(body.userId)
-            var index = user.adresses.indexOf(body.professionelId);
+            var index = user.adresses.indexOf(body.adresseId);
             if (index > -1) {
                 user.adresses.splice(index, 1);
             }
             await user.save()
+
+            await Adresse.findByIdAndRemove(body.adresseId);
+            return res.status(200).json({
+                status: 200,
+                message: "Adresse supprimée",
+            });
+
             return res.status(200).json({
                 status: 200,
                 message: user,
