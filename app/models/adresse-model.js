@@ -16,6 +16,9 @@ const AdresseSchema = new mongoose.Schema({
     ville: {
         type: String,
     },
+    avatar: {
+        type: String,
+    },
     status: {
         type: Boolean
     }

@@ -120,7 +120,15 @@ const authController = {
       } = req.body;
       const user = await Users.findOne({
         email: email
-      });
+      }).populate([
+        {
+          path: "adresses",
+          populate: {
+            path: "adresses",
+            model: "Adresse",
+          },
+        }
+      ]);
       if (!user)
         return res.status(400).json({
           status: 400,
@@ -243,10 +251,10 @@ const authController = {
           const passwordHash = await bcrypt.hash(newpassword, 10);
           const user = await Users.findByIdAndUpdate(
             id, {
-              password: passwordHash
-            }, {
-              useFindAndModify: false,
-            }
+            password: passwordHash
+          }, {
+            useFindAndModify: false,
+          }
           );
           if (!user) {
             return res.status(400).send({
