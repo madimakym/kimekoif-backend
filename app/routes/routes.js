@@ -9,6 +9,7 @@ module.exports = (app) => {
   const rdv = require("../controllers/rdvController");
   const facture = require("../controllers/factureController");
   const adresse = require("../controllers/adresseController");
+  const product = require("../controllers/product-controller");
   var router = require("express").Router();
 
   // router.post("/auth/resetpassword", auth.resetPassword);
@@ -47,14 +48,17 @@ module.exports = (app) => {
   router.post("/facture", facture.create);
   router.post("/pro/facture/", facture.findByUser);
   router.post("/customer/facture/", facture.findByCustomer);
-  // router.get("/disponibilite/:id", disponibilite.findOne);
-  // router.delete("/disponibilite/:id", disponibilite.delete);
 
   router.post("/adresse/create/", adresse.create);
   router.post("/user/adresse/", adresse.findByUser);
   router.get("/adresse/:id", adresse.findOne);
   router.post("/adresse/delete/", adresse.delete);
 
+  router.post("/product", product.create);
+  router.get("/product", product.findAll);
+  router.get("/product/:id", product.findOne);
+  router.put("/product/:id", product.update);
+  router.delete("/product/:id", product.delete);
 
   router.post("/stripe/charge/", checkout.payment);
 
