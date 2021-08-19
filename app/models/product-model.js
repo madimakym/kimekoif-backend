@@ -12,7 +12,7 @@ const ProductSchema = new mongoose.Schema(
             type: String,
         },
         visual: {
-            type: String,
+            type: Array,
         },
         status: {
             type: Boolean,
