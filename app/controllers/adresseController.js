@@ -77,11 +77,6 @@ const AdresseCtrl = {
                 status: 200,
                 message: "Adresse supprimée",
             });
-
-            return res.status(200).json({
-                status: 200,
-                message: user,
-            })
         } catch (error) {
             return res.status(500).json({
                 status: 500,
