@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   uid: {
     type: String,
+    unique: true,
+    required: true
   },
   firstname: {
     type: String,
@@ -67,6 +69,10 @@ const UserSchema = new mongoose.Schema({
     ref: 'Facture'
   }],
   adresses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Adresse'
+  }],
+  commandes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Adresse'
   }],
