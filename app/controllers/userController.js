@@ -40,6 +40,13 @@ const userCtrl = {
                 },
             },
             {
+                path: "commandes",
+                populate: {
+                    path: "commandes",
+                    model: "Commandes",
+                }
+            },
+            {
                 path: "adresses",
                 populate: {
                     path: "adresses",

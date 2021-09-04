@@ -74,7 +74,7 @@ const UserSchema = new mongoose.Schema({
   }],
   commandes: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Adresse'
+    ref: 'Commande'
   }],
 }, {
   timestamps: true,

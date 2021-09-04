@@ -27,4 +27,4 @@ CommandeSchema.method("toJSON", function () {
   return object;
 });
 
-module.exports = mongoose.model("Disponibilite", CommandeSchema);
+module.exports = mongoose.model("Commande", CommandeSchema);
