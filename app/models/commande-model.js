@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const CommandeSchema = new mongoose.Schema({
-  libelle: {
-    type: String,
-  },
   price: {
     type: String,
+  },
+  products: {
+    type: String
   },
   users: {
     type: mongoose.Schema.Types.ObjectId,
@@ -17,14 +18,5 @@ const CommandeSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
-CommandeSchema.method("toJSON", function () {
-  const {
-    __v,
-    _id,
-    ...object
-  } = this.toObject();
-  object.id = _id;
-  return object;
-});
-
+CommandeSchema.plugin(AutoIncrement, { inc_field: 'libelle' });
 module.exports = mongoose.model("Commande", CommandeSchema);

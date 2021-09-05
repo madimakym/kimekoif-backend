@@ -7,8 +7,8 @@ const CommandeCtrl = {
         try {
             const user = await User.findById(body.users)
             const commande = new Commande({
-                libelle: body.libelle,
                 price: body.price,
+                products: body.products,
                 users: body.users,
                 status: body.status ? body.status : true
             });
@@ -17,7 +17,7 @@ const CommandeCtrl = {
             await user.save()
             return res.status(200).json({
                 status: 200,
-                message: "Commande ajoutée",
+                message: "Commande ajoutée"
             })
         } catch (err) {
             return res.status(500).json({
