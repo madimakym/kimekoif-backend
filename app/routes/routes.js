@@ -12,6 +12,7 @@ module.exports = (app) => {
   const service = require("../controllers/serviceController");
   const user = require("../controllers/userController");
   const upload = require("../controllers/uploadfileController");
+  const wish = require("../controllers/wish-controller");
 
   var router = require("express").Router();
 
@@ -67,5 +68,12 @@ module.exports = (app) => {
   router.put("/user/:id", user.update);
 
   router.post("/upload", upload.upload);
+
+  router.post("/wish", wish.create);
+  router.get("/wish/:id", wish.find);
+  // router.get("/disponibilite/:id", disponibilite.findOne);
+  // router.delete("/disponibilite/:id", disponibilite.delete);
+  // router.post("/user/disponibilite/", disponibilite.findByUser);
+
   app.use("/api/", router);
 };

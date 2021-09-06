@@ -52,6 +52,13 @@ const userCtrl = {
                     path: "adresses",
                     model: "Adresse",
                 },
+            },
+            {
+                path: "wish",
+                populate: {
+                    path: "wish",
+                    model: "Product",
+                },
             }
             ]);
             return res.status(200).json(response);
@@ -62,6 +69,7 @@ const userCtrl = {
             });
         }
     },
+
 
     delete: async (req, res) => {
         const id = req.params.id;

@@ -76,6 +76,11 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Commande'
   }],
+  wishs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    index: { unique: true },
+    ref: 'Product'
+  }],
 }, {
   timestamps: true,
 });
