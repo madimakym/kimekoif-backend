@@ -41,16 +41,22 @@ const WishCtrl = {
     },
 
     delete: async (req, res) => {
-        const id = req.params.id;
+        const body = req.body
         try {
-            await Disponibilite.findByIdAndRemove(id);
+            const user = await User.findById(body.userId)
+            var index = user.wishs.indexOf(body.productId);
+            if (index > -1) {
+                user.wishs.splice(index, 1);
+            }
+            await user.save()
             return res.status(200).json({
                 status: 200,
-                message: "Date supprimée",
+                message: "Produit supprimé",
             });
         } catch (error) {
             return res.status(500).json({
-                message: error.message
+                status: 500,
+                message: error.message,
             });
         }
     }

@@ -71,9 +71,7 @@ module.exports = (app) => {
 
   router.post("/wish", wish.create);
   router.get("/wish/:id", wish.find);
-  // router.get("/disponibilite/:id", disponibilite.findOne);
-  // router.delete("/disponibilite/:id", disponibilite.delete);
-  // router.post("/user/disponibilite/", disponibilite.findByUser);
+  router.post("/wish/delete/", wish.delete);
 
   app.use("/api/", router);
 };
