@@ -40,13 +40,6 @@ const userCtrl = {
                 },
             },
             {
-                path: "commandes",
-                populate: {
-                    path: "commandes",
-                    model: "Commandes",
-                }
-            },
-            {
                 path: "adresses",
                 populate: {
                     path: "adresses",
@@ -54,9 +47,9 @@ const userCtrl = {
                 },
             },
             {
-                path: "wish",
+                path: "wishs",
                 populate: {
-                    path: "wish",
+                    path: "wishs",
                     model: "Product",
                 },
             }
