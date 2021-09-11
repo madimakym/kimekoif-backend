@@ -98,20 +98,6 @@ const ServiceCtrl = {
         }
     },
 
-    // delete: async (req, res) => {
-    //     const id = req.params.id;
-    //     try {
-    //         await Service.findByIdAndRemove(id);
-    //         return res.status(200).json({
-    //             status: 200,
-    //             message: "Service supprimé",
-    //         });
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             message: error.message
-    //         });
-    //     }
-    // }
     delete: async (req, res) => {
         const body = req.body
         try {

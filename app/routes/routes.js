@@ -25,7 +25,7 @@ module.exports = (app) => {
   router.post("/album", album.create);
   router.put("/album/:id", album.update);
   router.get("/album/:id", album.findOne);
-  router.delete("/album/:id", album.delete);
+  router.post("/album/delete/", album.delete);
   router.post("/user/album/", album.findByUser);
 
   router.post("/auth/login", auth.login);
