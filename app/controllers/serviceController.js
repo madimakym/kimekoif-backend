@@ -32,14 +32,11 @@ const ServiceCtrl = {
     },
 
     findByUser: async (req, res) => {
+        const body = req.body
         try {
             const user = await Service.find({
-                $or: [{
-                    users: req.body.users
-                }],
-            }).sort({
-                createdAt: "desc"
-            });
+                $or: [{ users: body.userId }],
+            }).sort({ createdAt: "desc" });
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -60,7 +57,7 @@ const ServiceCtrl = {
                     model: "Disponibilite",
                     select: 'start'
                 }
-            }, ])
+            },])
 
             const response = _.filter(data, cl => (cl.users.ville === body.ville));
 
@@ -101,17 +98,37 @@ const ServiceCtrl = {
         }
     },
 
+    // delete: async (req, res) => {
+    //     const id = req.params.id;
+    //     try {
+    //         await Service.findByIdAndRemove(id);
+    //         return res.status(200).json({
+    //             status: 200,
+    //             message: "Service supprimé",
+    //         });
+    //     } catch (error) {
+    //         return res.status(500).json({
+    //             message: error.message
+    //         });
+    //     }
+    // }
     delete: async (req, res) => {
-        const id = req.params.id;
+        const body = req.body
         try {
-            await Service.findByIdAndRemove(id);
+            const user = await User.findById(body.userId)
+            var index = user.services.indexOf(body.serviceId);
+            if (index > -1) { user.services.splice(index, 1) }
+            await user.save()
+            await Service.findByIdAndRemove(body.serviceId);
+
             return res.status(200).json({
                 status: 200,
                 message: "Service supprimé",
             });
         } catch (error) {
             return res.status(500).json({
-                message: error.message
+                status: 500,
+                message: error.message,
             });
         }
     }
