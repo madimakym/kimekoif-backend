@@ -17,10 +17,10 @@ module.exports = (app) => {
   var router = require("express").Router();
 
 
-  router.get("/adresse/:id", adresse.findOne);
+  router.post("/adresse/", adresse.create);
+  router.get("/adresse/:id", adresse.find);
   router.post("/adresse/delete/", adresse.delete);
-  router.post("/adresse/create/", adresse.create);
-  router.post("/user/adresse/", adresse.findByUser);
+  // router.post("/user/adresse/", adresse.findByUser);
 
   router.post("/album", album.create);
   router.put("/album/:id", album.update);

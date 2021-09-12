@@ -70,7 +70,7 @@ const UserSchema = new mongoose.Schema({
   }],
   adresses: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Adresse'
+    ref: 'Users'
   }],
   commandes: [{
     type: mongoose.Schema.Types.ObjectId,
