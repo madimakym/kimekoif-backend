@@ -38,7 +38,7 @@ module.exports = (app) => {
 
   router.post("/disponibilite", disponibilite.create);
   router.get("/disponibilite/:id", disponibilite.findOne);
-  router.delete("/disponibilite/:id", disponibilite.delete);
+  router.post("/disponibilite/delete/", disponibilite.delete);
   router.post("/user/disponibilite/", disponibilite.findByUser);
 
   router.post("/facture", facture.create);
