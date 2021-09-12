@@ -6,11 +6,11 @@ const AlbumCtrl = {
     create: async (req, res) => {
         const body = req.body
         try {
-            const user = await User.findById(body.users)
+            const user = await User.findById(body.userId)
             const album = new Album({
                 libelle: body.libelle,
                 visual: body.visual,
-                users: body.users,
+                users: body.userId,
                 status: body.status ? body.status : true
             });
             const savedAlbum = await album.save();

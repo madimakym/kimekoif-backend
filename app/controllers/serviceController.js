@@ -7,12 +7,12 @@ const ServiceCtrl = {
     create: async (req, res) => {
         const body = req.body
         try {
-            const user = await User.findById(body.users)
+            const user = await User.findById(body.userId)
             const service = new Service({
                 libelle: body.libelle,
                 price: body.price,
                 description: body.description,
-                users: body.users,
+                users: body.userId,
                 status: body.status ? body.status : true
             });
 
