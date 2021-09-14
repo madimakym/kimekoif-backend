@@ -20,7 +20,6 @@ module.exports = (app) => {
   router.post("/adresse/", adresse.create);
   router.get("/adresse/:id", adresse.find);
   router.post("/adresse/delete/", adresse.delete);
-  // router.post("/user/adresse/", adresse.findByUser);
 
   router.post("/album", album.create);
   router.put("/album/:id", album.update);
