@@ -6,12 +6,12 @@ const RdvCtrl = {
     create: async (req, res) => {
         const body = req.body
         try {
-            const user = await User.findById(body.users)
+            const user = await User.findById(body.userId)
             const rdv = new Rdv({
                 libelle: body.libelle,
                 customerId: body.customerId,
                 customerName: body.customerName,
-                users: body.users,
+                users: body.userId,
                 start: body.start,
                 status: body.status ? body.status : true
             });
@@ -42,7 +42,7 @@ const RdvCtrl = {
                     path: "users",
                     model: "Users",
                 },
-            }, ]);
+            },]);
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -65,7 +65,7 @@ const RdvCtrl = {
                     path: "users",
                     model: "Users",
                 },
-            }, ]);
+            },]);
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({

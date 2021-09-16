@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 
 const FactureSchema = new mongoose.Schema({
   libelle: {
@@ -12,10 +14,6 @@ const FactureSchema = new mongoose.Schema({
   customer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users"
-  },
-
-  service: {
-    type: String,
   },
 
   total: {
@@ -32,14 +30,5 @@ const FactureSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
-FactureSchema.method("toJSON", function () {
-  const {
-    __v,
-    _id,
-    ...object
-  } = this.toObject();
-  object.id = _id;
-  return object;
-});
-
+FactureSchema.plugin(AutoIncrement, { inc_field: 'factureNum' });
 module.exports = mongoose.model("Facture", FactureSchema);

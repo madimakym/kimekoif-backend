@@ -1,27 +1,26 @@
 // @ts-nocheck
 const Facture = require("../models/facture-model");
-const User = require("../models/user-model");
 
 const FactureCtrl = {
     create: async (req, res) => {
         const body = req.body
         try {
-            const user = await User.findById(body.users)
+            // const user = await User.findById(body.users)
             const facture = new Facture({
-                libelle: "Facture",
-                service: body.service,
+                libelle: body.libelle,
                 total: body.total,
                 customer: body.customer,
                 users: body.users,
                 date: body.date,
                 status: body.status ? body.status : true
             });
-            const savedFacture = await facture.save();
-            user.facture = user.facture.concat(savedFacture);
-            await user.save()
+            // const savedFacture = await facture.save();
+            // user.facture = user.facture.concat(savedFacture);
+            // await user.save()
+            await facture.save();
             return res.status(200).json({
                 status: 200,
-                message: "Date ajoutée",
+                message: "Facture ajoutée",
             })
         } catch (err) {
             return res.status(500).json({
