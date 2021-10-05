@@ -81,6 +81,10 @@ const UserSchema = new mongoose.Schema({
     index: { unique: true },
     ref: 'Product'
   }],
+  commentaires: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Commentaire'
+  }],
 }, {
   timestamps: true,
 });

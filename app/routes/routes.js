@@ -4,6 +4,7 @@ module.exports = (app) => {
   const album = require("../controllers/albumController");
   const auth = require("../controllers/authController");
   const commande = require("../controllers/commande-controller");
+  const commentaire = require("../controllers/commentaire-controller");
   const checkout = require("../controllers/checkoutController");
   const disponibilite = require("../controllers/disponibiliteController");
   const facture = require("../controllers/factureController");
@@ -43,6 +44,9 @@ module.exports = (app) => {
   router.post("/facture", facture.create);
   router.post("/pro/facture/", facture.findByUser);
   router.post("/customer/facture/", facture.findByCustomer);
+
+  router.post("/commentaire", commentaire.create);
+  router.post("/commentaires", commentaire.findAll);
 
   router.post("/product", product.create);
   router.get("/product", product.findAll);
