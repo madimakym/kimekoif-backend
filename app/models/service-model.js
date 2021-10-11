@@ -15,6 +15,9 @@ const ServiceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users"
     },
+    visual: {
+      type: Array,
+    },
     status: {
       type: Boolean,
     }

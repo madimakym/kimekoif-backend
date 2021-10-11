@@ -13,6 +13,7 @@ const ServiceCtrl = {
                 price: body.price,
                 description: body.description,
                 users: body.userId,
+                visual: body.visual,
                 status: body.status ? body.status : true
             });
 
