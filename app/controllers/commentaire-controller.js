@@ -34,7 +34,7 @@ const CommentaireCtrl = {
                     path: "users",
                     model: "Users",
                 },
-            }, ]);
+            },]);
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -47,14 +47,24 @@ const CommentaireCtrl = {
     findAll: async (req, res) => {
         try {
             const user = await Commentaire.find({
-                $or: [{customer: req.body.customerId}],
-            }).populate([{
-                path: "users",
-                populate: {
+                $or: [{ users: req.body.professionelID }],
+            }).populate([
+                {
                     path: "users",
-                    model: "Users",
+                    select: ['firstname', 'lastname'],
+                    populate: {
+                        path: "users",
+                        model: "Users",
+                    },
                 },
-            }, ]);
+                {
+                    path: "customer",
+                    select: ['firstname', 'lastname'],
+                    populate: {
+                        path: "customer",
+                        model: "Users",
+                    },
+                }]);
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
