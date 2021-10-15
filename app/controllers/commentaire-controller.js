@@ -72,6 +72,21 @@ const CommentaireCtrl = {
                 message: "Aucun resultat"
             });
         }
-    }
+    },
+
+    delete: async (req, res) => {
+        const id = req.params.id;
+        try {
+            await Commentaire.findByIdAndRemove(id);
+            return res.status(200).json({
+                status: 200,
+                message: "Commentaire supprimé"
+            });
+        } catch (error) {
+            return res.status(500).json({
+                message: error.message
+            });
+        }
+    },
 };
 module.exports = CommentaireCtrl;

@@ -47,6 +47,8 @@ module.exports = (app) => {
 
   router.post("/commentaire", commentaire.create);
   router.post("/commentaires", commentaire.findAll);
+  router.delete("/commentaire/:id", commentaire.delete);
+
 
   router.post("/product", product.create);
   router.get("/product", product.findAll);
