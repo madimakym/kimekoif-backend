@@ -36,8 +36,12 @@ const ServiceCtrl = {
         const body = req.body
         try {
             const user = await Service.find({
-                $or: [{ users: body.userId }],
-            }).sort({ createdAt: "desc" });
+                $or: [{
+                    users: body.userId
+                }],
+            }).sort({
+                createdAt: "desc"
+            });
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -58,27 +62,34 @@ const ServiceCtrl = {
                     model: "Disponibilite",
                     select: 'start'
                 }
-            },])
+            }, ])
 
-            const response = _.filter(data, cl => (cl.users.ville === body.ville));
-
-            if ((body.service) && (body.date === "")) {
-                const resService = _.filter(response, ser => (ser.libelle === body.service));
+            if ((body.service) && (body.date === "") && (body.ville === "")) {
+                const resService = _.filter(data, ser => (ser.libelle === body.service));
                 return res.status(200).json(resService);
             }
-            if ((body.date) && (body.service === "")) {
-                let resDisponibilite = response.filter(ser => ser.users.disponibilites.some(r => r.start == body.date));
-                return res.status(200).json(resDisponibilite);
+
+            if ((body.service) && (body.date) && (body.ville === "")) {
+                const resService = _.filter(data, ser => (ser.libelle === body.service));
+                return res.status(200).json(resService);
+                // let resDisponibilite = resService.filter(ser => ser.users.disponibilites.some(r => r.start == body.date));
+                // console.log("resService:", resService);
+                // return res.status(200).json(resDisponibilite);
             }
-            if (body.service && body.date) {
-                const resService = _.filter(response, ser => (ser.libelle === body.service));
-                let resDisponibilite = resService.filter(ser => ser.users.disponibilites.some(r => r.start == body.date));
-                return res.status(200).json(resDisponibilite);
-            } else {
-                return res.status(200).json(response);
+
+            if ((body.service) && (body.ville)) {
+                const resService = _.filter(data, ser => (ser.libelle === body.service));
+                let resVille = resService.filter(ser => ser.users.ville == body.ville);
+                return res.status(200).json(resVille);
+            }
+
+            if ((body.service === "") && (body.ville) && (body.date === "")) {
+                let resVille = data.filter(ser => ser.users.ville == body.ville);
+                return res.status(200).json(resVille);
             }
 
         } catch (error) {
+            console.log("error:", error);
             return res.status(500).json({
                 status: 500,
                 message: "Aucun resultat"
@@ -104,7 +115,9 @@ const ServiceCtrl = {
         try {
             const user = await User.findById(body.userId)
             var index = user.services.indexOf(body.serviceId);
-            if (index > -1) { user.services.splice(index, 1) }
+            if (index > -1) {
+                user.services.splice(index, 1)
+            }
             await user.save()
             await Service.findByIdAndRemove(body.serviceId);
 

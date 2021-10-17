@@ -18,41 +18,43 @@ const userCtrl = {
 
     findOne: async (req, res) => {
         try {
-            const response = await User.findOne({ uid: req.params.id }).populate([{
-                path: "services",
-                populate: {
+            const response = await User.findOne({
+                uid: req.params.id
+            }).populate([{
                     path: "services",
-                    model: "Service",
+                    populate: {
+                        path: "services",
+                        model: "Service",
+                    },
                 },
-            },
-            {
-                path: "disponibilites",
-                populate: {
+                {
                     path: "disponibilites",
-                    model: "Disponibilite",
+                    populate: {
+                        path: "disponibilites",
+                        model: "Disponibilite",
+                    },
                 },
-            },
-            {
-                path: "albums",
-                populate: {
+                {
                     path: "albums",
-                    model: "Album",
+                    populate: {
+                        path: "albums",
+                        model: "Album",
+                    },
                 },
-            },
-            {
-                path: "adresses",
-                populate: {
+                {
                     path: "adresses",
-                    model: "Adresse",
+                    populate: {
+                        path: "adresses",
+                        model: "Adresse",
+                    },
                 },
-            },
-            {
-                path: "wishs",
-                populate: {
+                {
                     path: "wishs",
-                    model: "Product",
-                },
-            }
+                    populate: {
+                        path: "wishs",
+                        model: "Product",
+                    },
+                }
             ]);
             return res.status(200).json(response);
         } catch (error) {
