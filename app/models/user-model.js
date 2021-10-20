@@ -78,7 +78,6 @@ const UserSchema = new mongoose.Schema({
   }],
   wishs: [{
     type: mongoose.Schema.Types.ObjectId,
-    index: { unique: true },
     ref: 'Product'
   }],
   commentaires: [{
