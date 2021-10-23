@@ -69,6 +69,7 @@ module.exports = (app) => {
   router.post("/stripe/charge/", checkout.payment);
 
   router.get("/user", user.findAll);
+  router.post("/user", user.findbyProfil);
   router.get("/user/:id", user.findOne);
   router.put("/user/:id", user.update);
 

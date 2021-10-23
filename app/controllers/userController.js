@@ -16,6 +16,43 @@ const userCtrl = {
         }
     },
 
+    findbyProfil: async (req, res) => {
+        const body = req.body
+        try {
+            const response = await User.find({
+                $or: [{
+                    profil: body.profil
+                }],
+            }).sort({
+                createdAt: "desc"
+            });
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: error.message,
+            });
+        }
+    },
+
+    findCustomer: async (_req, res) => {
+        try {
+            const response = await User.find({
+                $or: [{
+                    profil: "customer"
+                }],
+            }).sort({
+                createdAt: "desc"
+            });
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: error.message,
+            });
+        }
+    },
+
     findOne: async (req, res) => {
         try {
             const response = await User.findOne({
@@ -64,7 +101,6 @@ const userCtrl = {
             });
         }
     },
-
 
     delete: async (req, res) => {
         const id = req.params.id;
