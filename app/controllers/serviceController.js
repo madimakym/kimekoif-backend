@@ -84,7 +84,7 @@ const ServiceCtrl = {
             }
 
             if ((body.service === "") && (body.ville) && (body.date === "")) {
-                let resVille = data.filter(ser => ser.users.ville == body.ville);
+                let resVille = data.filter(ser => ser.users?.ville == body.ville);
                 return res.status(200).json(resVille);
             }
 
