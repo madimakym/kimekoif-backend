@@ -32,6 +32,7 @@ module.exports = (app) => {
   router.post("/auth/register", auth.register);
 
   router.post("/commande", commande.create);
+  router.get("/commandes", commande.findAll);
   router.get("/commande/:id", commande.findOne);
   router.delete("/commande/:id", commande.delete);
   router.post("/user/commande/", commande.findByUser);

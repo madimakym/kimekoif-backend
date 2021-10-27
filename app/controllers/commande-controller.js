@@ -27,6 +27,20 @@ const CommandeCtrl = {
         }
     },
 
+    findAll: async (_req, res) => {
+        try {
+            const response = await Commande.find().sort({
+                createdAt: "desc"
+            });
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: error.message,
+            });
+        }
+    },
+    
     findByUser: async (req, res) => {
         try {
             const user = await Commande.find({
