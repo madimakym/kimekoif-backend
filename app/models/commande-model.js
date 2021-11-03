@@ -8,15 +8,28 @@ const CommandeSchema = new mongoose.Schema({
   products: {
     type: String
   },
-  users: {
+  paiement_method: {
+    type: String
+  },
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users"
   },
+  hairdresser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users"
+  },
+  payment_status: {
+    type: String,
+  },
   status: {
-    type: Boolean,
-  }
+    type: String,
+  },
+
 }, {
   timestamps: true,
 });
-CommandeSchema.plugin(AutoIncrement, { inc_field: 'libelle' });
+CommandeSchema.plugin(AutoIncrement, {
+  inc_field: 'commandeId'
+});
 module.exports = mongoose.model("Commande", CommandeSchema);

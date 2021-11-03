@@ -36,6 +36,8 @@ module.exports = (app) => {
   router.get("/commande/:id", commande.findOne);
   router.delete("/commande/:id", commande.delete);
   router.post("/user/commande/", commande.findByUser);
+  router.put("/commande/:id", commande.update);
+
 
   router.post("/disponibilite", disponibilite.create);
   router.get("/disponibilite/:id", disponibilite.findOne);
