@@ -119,33 +119,8 @@ const userCtrl = {
 
     update: async (req, res) => {
         const id = req.params.id;
-        const {
-            firstname,
-            lastname,
-            phone,
-            ville,
-            departement,
-            adresse,
-            mobilite,
-            siret,
-            avatar,
-            description
-        } = req.body;
         try {
-            const data = {
-                firstname: firstname,
-                lastname: lastname,
-                phone: phone,
-                ville: ville,
-                departement: departement,
-                adresse: adresse,
-                mobilite: mobilite,
-                siret: siret,
-                description: description,
-                avatar: avatar
-            };
-
-            await User.findByIdAndUpdate(id, data, {
+            await User.findByIdAndUpdate(id, req.body, {
                 useFindAndModify: false,
             });
             return res.status(200).json({
