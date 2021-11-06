@@ -58,40 +58,40 @@ const userCtrl = {
             const response = await User.findOne({
                 uid: req.params.id
             }).populate([{
+                path: "services",
+                populate: {
                     path: "services",
-                    populate: {
-                        path: "services",
-                        model: "Service",
-                    },
+                    model: "Service",
                 },
-                {
+            },
+            {
+                path: "disponibilites",
+                populate: {
                     path: "disponibilites",
-                    populate: {
-                        path: "disponibilites",
-                        model: "Disponibilite",
-                    },
+                    model: "Disponibilite",
                 },
-                {
+            },
+            {
+                path: "albums",
+                populate: {
                     path: "albums",
-                    populate: {
-                        path: "albums",
-                        model: "Album",
-                    },
+                    model: "Album",
                 },
-                {
+            },
+            {
+                path: "adresses",
+                populate: {
                     path: "adresses",
-                    populate: {
-                        path: "adresses",
-                        model: "Adresse",
-                    },
+                    model: "Adresse",
                 },
-                {
+            },
+            {
+                path: "wishs",
+                populate: {
                     path: "wishs",
-                    populate: {
-                        path: "wishs",
-                        model: "Product",
-                    },
-                }
+                    model: "Product",
+                },
+            }
             ]);
             return res.status(200).json(response);
         } catch (error) {
@@ -134,5 +134,27 @@ const userCtrl = {
         }
     },
 
+    search: async (req, res) => {
+        const body = req.body
+        try {
+            const response = await User.find({
+                $or: [
+                    { firstname: { $regex: new RegExp(body.libelle, "i") } },
+                    { lastname: { $regex: new RegExp(body.libelle, "i") } }
+                ],
+                $and: [{
+                    profil: {
+                        $regex: new RegExp(body.profil, "i")
+                    }
+                }],
+            });
+            return res.status(200).json(response);
+
+        } catch (err) {
+            return res.status(500).json({
+                message: err.message
+            });
+        }
+    }
 };
 module.exports = userCtrl;

@@ -1,29 +1,30 @@
 const mongoose = require("mongoose");
 
-const ProductSchema = new mongoose.Schema(
-    {
-        libelle: {
-            type: String,
-        },
-        description: {
-            type: String
-        },
-        price: {
-            type: String,
-        },
-        visual: {
-            type: Array,
-        },
-        status: {
-            type: Boolean,
-        }
+const ProductSchema = new mongoose.Schema({
+    libelle: {
+        type: String,
     },
-    {
-        timestamps: true,
+    description: {
+        type: String
+    },
+    price: {
+        type: String,
+    },
+    visual: {
+        type: Array,
+    },
+    status: {
+        type: Boolean,
     }
-);
+}, {
+    timestamps: true,
+});
 ProductSchema.method("toJSON", function () {
-    const { __v, _id, ...object } = this.toObject();
+    const {
+        __v,
+        _id,
+        ...object
+    } = this.toObject();
     object.id = _id;
     return object;
 });

@@ -3,6 +3,36 @@ const Product = require("../models/product-model");
 var _ = require('lodash');
 
 const ProductCtrl = {
+    // create: async (req, res) => {
+    //     const body = req.body
+    //     try {
+    //         const product = new Product({
+    //             libelle: body.libelle,
+    //             description: body.description,
+    //             price: body.price,
+    //             visual: body.visual,
+    //             status: body.status ? body.status : true
+    //         });
+    //         const savedProduct = await product.save();
+
+    //         const gallery = new Gallery({
+    //             libelle: "body.visual",
+    //             productId: savedProduct._id
+    //         });
+    //         const savedGallery = await gallery.save();
+    //         savedProduct.galleryId = savedProduct.galleryId.concat(savedGallery);
+    //         await savedProduct.save()
+    //         return res.status(200).json({
+    //             status: 200,
+    //             message: "Product ajouté",
+    //         });
+    //     } catch (err) {
+    //         return res.status(500).json({
+    //             status: 500,
+    //             message: err.message,
+    //         });
+    //     }
+    // },
     create: async (req, res) => {
         const body = req.body
         try {
