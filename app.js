@@ -30,8 +30,11 @@ app.listen(PORT, () => {
   console.log(` app listening at http://localhost:${PORT}`);
 });
 
+
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
-
+app.get('/', function (req, res) {
+  res.render('portfolio')
+});
 require("./app/routes/routes.js")(app);
 app.use(express.static("public"));
