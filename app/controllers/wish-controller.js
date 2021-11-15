@@ -1,22 +1,27 @@
 const User = require("../models/user-model");
+const Wish = require("../models/wish-model");
 
 const WishCtrl = {
     create: async (req, res) => {
         const body = req.body;
-        try {
-            const user = await User.findById(body.userId)
-            user.wishs = user.wishs.concat(body.productId);
-            await user.save()
-            return res.status(200).json({
-                status: 200,
-                message: "Produit ajouté",
-            })
-        } catch (err) {
-            return res.status(500).json({
-                status: 500,
-                message: err.message,
-            });
-        }
+
+        console.log("#body", body);
+        // try {
+        //     const user = await User.findById(body.customer)
+        //     const wish = new Wish(body);
+        //     const savedWish = await wish.save();
+        //     user.wishs = user.wishs.concat(savedWish);
+        //     await user.save()
+        //     return res.status(200).json({
+        //         status: 200,
+        //         message: "Favoris ajouté"
+        //     })
+        // } catch (err) {
+        //     return res.status(500).json({
+        //         status: 500,
+        //         message: err.message,
+        //     });
+        // }
     },
 
     find: async (req, res) => {

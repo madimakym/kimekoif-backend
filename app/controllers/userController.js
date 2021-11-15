@@ -80,9 +80,10 @@ const userCtrl = {
             },
             {
                 path: "adresses",
+                select: ['firstname', 'lastname', 'avatar', 'ville'],
                 populate: {
                     path: "adresses",
-                    model: "Adresse",
+                    model: "Users",
                 },
             },
             {

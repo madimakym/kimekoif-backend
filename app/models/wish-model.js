@@ -1,23 +1,13 @@
 const mongoose = require("mongoose");
 
 const WishSchema = new mongoose.Schema({
-    professional: {
+    customer: {
         type: mongoose.Schema.Types.ObjectId,
-        unique: true,
-        required: true,
         ref: "Users"
     },
-    firstname: {
-        type: String,
-    },
-    lastname: {
-        type: String,
-    },
-    ville: {
-        type: String,
-    },
-    avatar: {
-        type: String,
+    hairdresser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
     },
     status: {
         type: Boolean
@@ -35,4 +25,4 @@ WishSchema.method("toJSON", function () {
     return object;
 });
 
-module.exports = mongoose.model("Adresse", WishSchema);
+module.exports = mongoose.model("Wish", WishSchema);
