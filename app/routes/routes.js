@@ -14,6 +14,7 @@ module.exports = (app) => {
   const user = require("../controllers/userController");
   const upload = require("../controllers/uploadfileController");
   const wish = require("../controllers/wish-controller");
+  const stripe = require("../controllers/stripe-controller");
 
   var router = require("express").Router();
 
@@ -82,6 +83,9 @@ module.exports = (app) => {
   router.post("/wish", wish.create);
   router.get("/wish/:id", wish.find);
   router.post("/wish/delete/", wish.delete);
+
+  // STRIPE
+  router.get("/stripe/payment", stripe.paymentintent);
 
   app.use("/api/", router);
 };
