@@ -2,7 +2,30 @@ const Stripe = require("stripe");
 const _ = require("lodash");
 const stripeKey = require("../../utils/keys").stripeKey;
 const stripe = Stripe(stripeKey);
+const session = require("express-session");
 const moment = require('moment');
+const StripeService = require("./stripe-service");
+
+
+const generateAccountLink = (accountID, origin) => {
+    return stripe.accountLinks
+        .create({
+            type: "account_onboarding",
+            account: accountID,
+            refresh_url: `https://www.kimekoif.com/refresh_url`,
+            return_url: `https://www.kimekoif.com/url_de_retour_apres_inscription`,
+        })
+        .then((link) => link.url);
+    // return stripe.accountLinks
+    //     .create({
+    //         type: "account_onboarding",
+    //         account: accountID,
+    //         refresh_url: `${origin}/onboard-user/refresh`,
+    //         return_url: `${origin}/success.html`,
+    //     })
+    //     .then((link) => link.url);
+}
+
 
 const StripeCtrl = {
     paymentintent: async (req, res) => {
@@ -37,5 +60,49 @@ const StripeCtrl = {
             });
         }
     },
+
+    onboardUser: async (req, res) => {
+        try {
+            const account = await stripe.accounts.create({ type: "standard" });
+            // req.session.accountID = account.id;
+            // const origin = `"https://"}${req.headers.host}`;
+            const origin = req.headers.host;
+            // console.log("req.headers:", req.headers.host);
+
+            // const origin = `${req.headers.origin}`;
+            const accountLinkURL = await generateAccountLink(account.id, origin);
+            // console.log("account:", account.id);
+            console.log("accountLinkURL:", accountLinkURL);
+            res.send({ url: accountLinkURL });
+        } catch (err) {
+            return res.status(500).json({
+                status: 500,
+                error: err.message,
+            });
+        }
+    },
+
+
+    onboardUserRefresh: async (req, res) => {
+        try {
+            const { accountID } = req.session;
+            const origin = `${req.secure ? "https://" : "https://"}${req.headers.host}`;
+
+            const accountLinkURL = await generateAccountLink(accountID, origin);
+            res.redirect(accountLinkURL);
+        } catch (err) {
+            res.status(500).send({
+                error: err.message,
+            });
+        }
+    },
+
+
+    // app.get("/", (req, res) => {
+    //     const path = resolve(process.env.STATIC_DIR + "/index.html");
+    //     res.sendFile(path);
+    // });
+
+
 };
 module.exports = StripeCtrl;

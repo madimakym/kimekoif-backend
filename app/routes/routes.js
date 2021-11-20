@@ -86,6 +86,8 @@ module.exports = (app) => {
 
   // STRIPE
   router.get("/stripe/payment", stripe.paymentintent);
+  // router.get("/stripe/authorize", stripe.authorizeAccount);
+  router.post("/stripe/onboard-user", stripe.onboardUser);
 
   app.use("/api/", router);
 };
