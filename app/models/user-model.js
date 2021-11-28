@@ -45,6 +45,11 @@ const UserSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  stripe_account_id: {
+    type: String,
+  },
+  stripe_seller: {},
+  stripe_session: {},
   status: {
     type: Boolean,
   },
