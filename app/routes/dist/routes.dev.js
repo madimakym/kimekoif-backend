@@ -88,7 +88,8 @@ module.exports = function (app) {
   router.post("/stripe/onboard-user", stripe.onboardUser);
   router.post("/stripe/get-account-status", stripe.getAccountStatus);
   router.post("/stripe/get-account-balance", stripe.getAccountBalance);
-  router.post("/stripe/payout-setting", stripe.payoutSetting); // router.post("/stripe/onboard-user/refresh", stripe.onboardUserRefresh);
+  router.post("/stripe/payout-setting", stripe.payoutSetting);
+  router.post("/stripe/session-id", stripe.sessionId); // router.post("/stripe/onboard-user/refresh", stripe.onboardUserRefresh);
 
   app.use("/api/", router);
 };

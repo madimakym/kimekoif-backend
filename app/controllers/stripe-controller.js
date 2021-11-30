@@ -4,19 +4,6 @@ const queryString = require('query-string');
 const stripe = Stripe(stripeKey);
 const User = require("../models/user-model");
 
-
-// const generateAccountLink = (accountID, origin) => {
-//     return stripe.accountLinks
-//         .create({
-//             type: "account_onboarding",
-//             account: accountID,
-//             refresh_url: `http://${origin}/api/stripe/onboard-user/refresh`,
-//             return_url: `https://www.kimekoif.com/return_url`,
-//         })
-//         .then((link) => link.url);
-// }
-
-
 // const updateDelayDays = (accountID) => {
 //     const account = stripe.account.update(accountID, {
 //         settings: {
@@ -29,7 +16,6 @@ const User = require("../models/user-model");
 //     });
 //     return account;
 // }
-
 
 
 const StripeCtrl = {
@@ -67,58 +53,57 @@ const StripeCtrl = {
     },
 
     onboardUser: async (req, res) => {
-        const body = req.body
-        const user = await User.findById(body.hairdresserId);
-        if (!user?.stripe_account_id) {
-            const account = await stripe.accounts.create({ type: "express" });
-            console.log("account.id:", account.id)
-            user.stripe_account_id = account.id;
-            user.save()
+        try {
+            const body = req.body
+            const user = await User.findById(body.hairdresserId);
+            if (!user?.stripe_account_id) {
+                const account = await stripe.accounts.create({ type: "express" });
+                user.stripe_account_id = account.id;
+                user.save()
+            }
+            // create Login link based on account id(for frontend to complete onboarding)
+            let accountLink = await stripe.accountLinks.create({
+                account: user.stripe_account_id,
+                refresh_url: process.env.STRIPE_SETTING_REDIRECT_URL,
+                return_url: process.env.STRIPE_REDIRECT_URL,
+                type: "account_onboarding"
+            })
+
+            // prefill any info such as email
+            accountLink = Object.assign(accountLink, {
+                "stripe_user[email]": user.email || undefined
+            });
+            let link = `${accountLink.url}?${queryString.stringify(accountLink)}`;
+            res.send({ url: link });
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                error: error.message
+            });
         }
-
-        // create Login link based on account id(for frontend to complete onboarding)
-        let accountLink = await stripe.accountLinks.create({
-            account: user.stripe_account_id,
-            refresh_url: process.env.STRIPE_REDIRECT_URL,
-            return_url: process.env.STRIPE_REDIRECT_URL,
-            type: "account_onboarding"
-        })
-        // prefill any info such as email
-        accountLink = Object.assign(accountLink, {
-            "stripe_user[email]": user.email || undefined
-        });
-        let link = `${accountLink.url}?${queryString.stringify(accountLink)}`;
-        res.send({ url: link });
-
-        // try {
-        //     const account = await stripe.accounts.create({ type: "standard" });
-        //     const origin = req.headers.host;
-        //     req.session.accountID = account.id;
-        //     const accountLinkURL = await generateAccountLink(account.id, origin);
-        //     res.send({ url: accountLinkURL });
-        // } catch (err) {
-        //     return res.status(500).json({
-        //         status: 500,
-        //         error: err.message,
-        //     });
-        // }
     },
 
     getAccountStatus: async (req, res) => {
-        const body = req.body
-        const user = await User.findById(body.hairdresserId);
-        const account = await stripe.accounts.retrieve(user.stripe_account_id);
-        // const updatedAccount = await updateDelayDays(account.id);
-        const userUpdate = await User.findByIdAndUpdate(user._id, { stripe_seller: account }, {
-            new: true
-        });
-        res.send(userUpdate);
+        try {
+            const body = req.body
+            const user = await User.findById(body.hairdresserId);
+            const account = await stripe.accounts.retrieve(user.stripe_account_id);
+            const userUpdate = await User.findByIdAndUpdate(user._id, { stripe_seller: account }, {
+                new: true
+            });
+            res.send(userUpdate);
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                error: error.message
+            });
+        }
     },
 
     getAccountBalance: async (req, res) => {
-        const body = req.body
-        const user = await User.findById(body.hairdresserId);
         try {
+            const body = req.body
+            const user = await User.findById(body.hairdresserId);
             const balance = await stripe.balance.retrieve({
                 stripeAccount: user.stripe_account_id
             });
@@ -127,35 +112,49 @@ const StripeCtrl = {
     },
 
     payoutSetting: async (req, res) => {
-        const body = req.body
-
         try {
+            const body = req.body
             const user = await User.findById(body.hairdresserId);
-
             const loginLink = await stripe.accounts.createLoginLink(
                 user.stripe_account_id,
                 {
                     redirect_url: process.env.STRIPE_SETTING_REDIRECT_URL
                 }
             );
-            console.log("loginLink:", loginLink);
             res.json(loginLink);
         } catch (error) {
             console.log("error:", error)
         }
     },
 
-    // onboardUserRefresh: async (req, res) => {
-    //     try {
-    //         const origin = req.headers.host;
-    //         const accountLinkURL = await generateAccountLink(req.session.accountID, origin);
-    //         res.send({ url: accountLinkURL });
-    //     } catch (err) {
-    //         return res.status(500).json({
-    //             status: 500,
-    //             error: err.message,
-    //         });
-    //     }
-    // },
+    sessionId: async (req, res) => {
+        try {
+            const session = await stripe.checkout.sessions.create({
+                line_items: [
+                    {
+                        name: "Tresse",
+                        amount: 1000,
+                        currency: "usd",
+                        quantity: 1
+                    },
+                ],
+                mode: 'payment',
+                success_url: 'https://example.com/success',
+                cancel_url: 'https://example.com/failure',
+                payment_intent_data: {
+                    application_fee_amount: 123,
+                    transfer_data: {
+                        destination: 'acct_1JylQf2fmxOVDRDT',
+                    },
+                },
+            });
+            console.log("SESSIONS ===>", session)
+        } catch (err) {
+            return res.status(500).json({
+                status: 500,
+                error: err.message,
+            });
+        }
+    },
 };
 module.exports = StripeCtrl;

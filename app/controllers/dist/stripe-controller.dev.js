@@ -8,17 +8,7 @@ var queryString = require('query-string');
 
 var stripe = Stripe(stripeKey);
 
-var User = require("../models/user-model"); // const generateAccountLink = (accountID, origin) => {
-//     return stripe.accountLinks
-//         .create({
-//             type: "account_onboarding",
-//             account: accountID,
-//             refresh_url: `http://${origin}/api/stripe/onboard-user/refresh`,
-//             return_url: `https://www.kimekoif.com/return_url`,
-//         })
-//         .then((link) => link.url);
-// }
-// const updateDelayDays = (accountID) => {
+var User = require("../models/user-model"); // const updateDelayDays = (accountID) => {
 //     const account = stripe.account.update(accountID, {
 //         settings: {
 //             payouts: {
@@ -80,55 +70,65 @@ var StripeCtrl = {
     }, null, null, [[0, 10]]);
   },
   onboardUser: function onboardUser(req, res) {
-    var body, user;
+    var body, user, account, accountLink, link;
     return regeneratorRuntime.async(function onboardUser$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            _context2.prev = 0;
             body = req.body;
-            _context2.next = 3;
+            _context2.next = 4;
             return regeneratorRuntime.awrap(User.findById(body.hairdresserId));
 
-          case 3:
+          case 4:
             user = _context2.sent;
-            console.log("user:", user); // if (!user?.stripe_account_id) {
-            //     const account = await stripe.accounts.create({ type: "express" });
-            //     console.log("account.id:", account.id)
-            //     user.stripe_account_id = account.id;
-            //     user.save()
-            // }
-            // create Login link based on account id (for frontend to complete onboarding)
-            // let accountLink = await stripe.accountLinks.create({
-            //     account: user.stripe_account_id,
-            //     refresh_url: process.env.STRIPE_REDIRECT_URL,
-            //     return_url: process.env.STRIPE_REDIRECT_URL,
-            //     type: "account_onboarding"
-            // })
-            // // prefill any info such as email
-            // accountLink = Object.assign(accountLink, {
-            //     "stripe_user[email]": user.email || undefined
-            // });
-            // let link = `${accountLink.url}?${queryString.stringify(accountLink)}`;
-            // res.send({ url: link });
-            // try {
-            //     const account = await stripe.accounts.create({ type: "standard" });
-            //     const origin = req.headers.host;
-            //     req.session.accountID = account.id;
-            //     const accountLinkURL = await generateAccountLink(account.id, origin);
-            //     res.send({ url: accountLinkURL });
-            // } catch (err) {
-            //     return res.status(500).json({
-            //         status: 500,
-            //         error: err.message,
-            //     });
-            // }
+            _context2.next = 7;
+            return regeneratorRuntime.awrap(stripe.accounts.create({
+              type: "express"
+            }));
 
-          case 5:
+          case 7:
+            account = _context2.sent;
+            user.stripe_account_id = account.id;
+            user.save(); // }
+            // create Login link based on account id(for frontend to complete onboarding)
+
+            _context2.next = 12;
+            return regeneratorRuntime.awrap(stripe.accountLinks.create({
+              account: user.stripe_account_id,
+              refresh_url: process.env.STRIPE_REDIRECT_URL,
+              return_url: process.env.STRIPE_REDIRECT_URL,
+              type: "account_onboarding"
+            }));
+
+          case 12:
+            accountLink = _context2.sent;
+            console.log("accountLink:", accountLink); // prefill any info such as email
+
+            accountLink = Object.assign(accountLink, {
+              "stripe_user[email]": user.email || undefined
+            });
+            link = "".concat(accountLink.url, "?").concat(queryString.stringify(accountLink));
+            res.send({
+              url: link
+            });
+            _context2.next = 22;
+            break;
+
+          case 19:
+            _context2.prev = 19;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", res.status(500).json({
+              status: 500,
+              error: _context2.t0.message
+            }));
+
+          case 22:
           case "end":
             return _context2.stop();
         }
       }
-    });
+    }, null, null, [[0, 19]]);
   },
   getAccountStatus: function getAccountStatus(req, res) {
     var body, user, account, userUpdate;
@@ -136,34 +136,45 @@ var StripeCtrl = {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            _context3.prev = 0;
             body = req.body;
-            _context3.next = 3;
+            _context3.next = 4;
             return regeneratorRuntime.awrap(User.findById(body.hairdresserId));
 
-          case 3:
+          case 4:
             user = _context3.sent;
-            _context3.next = 6;
+            _context3.next = 7;
             return regeneratorRuntime.awrap(stripe.accounts.retrieve(user.stripe_account_id));
 
-          case 6:
+          case 7:
             account = _context3.sent;
-            _context3.next = 9;
+            _context3.next = 10;
             return regeneratorRuntime.awrap(User.findByIdAndUpdate(user._id, {
               stripe_seller: account
             }, {
               "new": true
             }));
 
-          case 9:
+          case 10:
             userUpdate = _context3.sent;
             res.send(userUpdate);
+            _context3.next = 17;
+            break;
 
-          case 11:
+          case 14:
+            _context3.prev = 14;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", res.status(500).json({
+              status: 500,
+              error: _context3.t0.message
+            }));
+
+          case 17:
           case "end":
             return _context3.stop();
         }
       }
-    });
+    }, null, null, [[0, 14]]);
   },
   getAccountBalance: function getAccountBalance(req, res) {
     var body, user, balance;
@@ -171,13 +182,13 @@ var StripeCtrl = {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
+            _context4.prev = 0;
             body = req.body;
-            _context4.next = 3;
+            _context4.next = 4;
             return regeneratorRuntime.awrap(User.findById(body.hairdresserId));
 
-          case 3:
+          case 4:
             user = _context4.sent;
-            _context4.prev = 4;
             _context4.next = 7;
             return regeneratorRuntime.awrap(stripe.balance.retrieve({
               stripeAccount: user.stripe_account_id
@@ -191,14 +202,14 @@ var StripeCtrl = {
 
           case 11:
             _context4.prev = 11;
-            _context4.t0 = _context4["catch"](4);
+            _context4.t0 = _context4["catch"](0);
 
           case 13:
           case "end":
             return _context4.stop();
         }
       }
-    }, null, null, [[4, 11]]);
+    }, null, null, [[0, 11]]);
   },
   payoutSetting: function payoutSetting(req, res) {
     var body, user, loginLink;
@@ -206,8 +217,8 @@ var StripeCtrl = {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
+            _context5.prev = 0;
             body = req.body;
-            _context5.prev = 1;
             _context5.next = 4;
             return regeneratorRuntime.awrap(User.findById(body.hairdresserId));
 
@@ -220,34 +231,68 @@ var StripeCtrl = {
 
           case 7:
             loginLink = _context5.sent;
-            console.log("loginLink:", loginLink);
             res.json(loginLink);
-            _context5.next = 15;
+            _context5.next = 14;
             break;
 
-          case 12:
-            _context5.prev = 12;
-            _context5.t0 = _context5["catch"](1);
+          case 11:
+            _context5.prev = 11;
+            _context5.t0 = _context5["catch"](0);
             console.log("error:", _context5.t0);
 
-          case 15:
+          case 14:
           case "end":
             return _context5.stop();
         }
       }
-    }, null, null, [[1, 12]]);
-  } // onboardUserRefresh: async (req, res) => {
-  //     try {
-  //         const origin = req.headers.host;
-  //         const accountLinkURL = await generateAccountLink(req.session.accountID, origin);
-  //         res.send({ url: accountLinkURL });
-  //     } catch (err) {
-  //         return res.status(500).json({
-  //             status: 500,
-  //             error: err.message,
-  //         });
-  //     }
-  // },
+    }, null, null, [[0, 11]]);
+  },
+  sessionId: function sessionId(req, res) {
+    var session;
+    return regeneratorRuntime.async(function sessionId$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            _context6.prev = 0;
+            _context6.next = 3;
+            return regeneratorRuntime.awrap(stripe.checkout.sessions.create({
+              line_items: [{
+                name: "Tresse",
+                amount: 1000,
+                currency: "usd",
+                quantity: 1
+              }],
+              mode: 'payment',
+              success_url: 'https://example.com/success',
+              cancel_url: 'https://example.com/failure',
+              payment_intent_data: {
+                application_fee_amount: 123,
+                transfer_data: {
+                  destination: 'acct_1JylQf2fmxOVDRDT'
+                }
+              }
+            }));
 
+          case 3:
+            session = _context6.sent;
+            console.log("SESSIONS ===>", session);
+            _context6.next = 10;
+            break;
+
+          case 7:
+            _context6.prev = 7;
+            _context6.t0 = _context6["catch"](0);
+            return _context6.abrupt("return", res.status(500).json({
+              status: 500,
+              error: _context6.t0.message
+            }));
+
+          case 10:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, null, null, [[0, 7]]);
+  }
 };
 module.exports = StripeCtrl;
