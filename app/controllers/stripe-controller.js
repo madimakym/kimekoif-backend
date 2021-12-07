@@ -3,6 +3,7 @@ const stripeKey = require("../../utils/keys").stripeKey;
 const queryString = require('query-string');
 const stripe = Stripe(stripeKey);
 const User = require("../models/user-model");
+const Service = require("../models/service-model");
 
 // const updateDelayDays = (accountID) => {
 //     const account = stripe.account.update(accountID, {
@@ -129,12 +130,24 @@ const StripeCtrl = {
 
     sessionId: async (req, res) => {
         try {
+            const body = req.body
+            const item = await Service.findById(body.serviceId).populate([{
+                path: "users",
+                model: "Users",
+                select: 'stripe_account_id'
+            }]);
+
+            // console.log("item ===>", item.users.stripe_account_id)
+
+            const fee = (item.price * 20) / 100;
+            console.log("item ===>", fee)
+
             const session = await stripe.checkout.sessions.create({
                 line_items: [
                     {
-                        name: "Tresse",
-                        amount: 1000,
-                        currency: "usd",
+                        name: item.libelle,
+                        amount: item.price * 100,
+                        currency: "eur",
                         quantity: 1
                     },
                 ],
@@ -142,13 +155,23 @@ const StripeCtrl = {
                 success_url: 'https://example.com/success',
                 cancel_url: 'https://example.com/failure',
                 payment_intent_data: {
-                    application_fee_amount: 123,
+                    application_fee_amount: fee * 100,
+                    //this seller can see his balance in our frontend dashboard
                     transfer_data: {
-                        destination: 'acct_1JylQf2fmxOVDRDT',
+                        destination: item.users.stripe_account_id
                     },
                 },
             });
-            console.log("SESSIONS ===>", session)
+
+            const userUpdate = await User.findByIdAndUpdate(item.users._id, { stripe_session: session }, {
+                new: true
+            });
+            res.send({
+                sessionId: session.id
+            });
+
+            console.log("userUpdate ===>", userUpdate);
+            console.log("SESSIONS ===>", session);
         } catch (err) {
             return res.status(500).json({
                 status: 500,
