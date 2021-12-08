@@ -136,11 +136,7 @@ const StripeCtrl = {
                 model: "Users",
                 select: 'stripe_account_id'
             }]);
-
-            // console.log("item ===>", item.users.stripe_account_id)
-
             const fee = (item.price * 20) / 100;
-            console.log("item ===>", fee)
 
             const session = await stripe.checkout.sessions.create({
                 line_items: [
@@ -152,8 +148,8 @@ const StripeCtrl = {
                     },
                 ],
                 mode: 'payment',
-                success_url: 'https://example.com/success',
-                cancel_url: 'https://example.com/failure',
+                success_url: 'https://www.kimekoif.com/success',
+                cancel_url: 'https://www.kimekoif.com/failure',
                 payment_intent_data: {
                     application_fee_amount: fee * 100,
                     //this seller can see his balance in our frontend dashboard

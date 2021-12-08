@@ -15,6 +15,7 @@ module.exports = (app) => {
   const upload = require("../controllers/uploadfileController");
   const wish = require("../controllers/wish-controller");
   const stripe = require("../controllers/stripe-controller");
+  const mailchimp = require("../controllers/mailchimp-controller");
 
   var router = require("express").Router();
 
@@ -93,6 +94,14 @@ module.exports = (app) => {
   router.post("/stripe/payout-setting", stripe.payoutSetting);
   router.post("/stripe/session-id", stripe.sessionId);
   // router.post("/stripe/onboard-user/refresh", stripe.onboardUserRefresh);
+
+
+  // MAILCHIMP
+  router.post("/mailchimp/check", mailchimp.check);
+  router.post("/mailchimp/subscribe-contact", mailchimp.subscribeContact);
+  router.post("/mailchimp/unsubscribe-contact", mailchimp.check);
+  router.post("/mailchimp/check-contact", mailchimp.check);
+
 
   app.use("/api/", router);
 };
