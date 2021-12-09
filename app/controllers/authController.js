@@ -1,44 +1,55 @@
 const Users = require("../models/user-model");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
+
+mailchimp.setConfig({
+  apiKey: process.env.MAILCHIMP_API_KEY,
+  server: process.env.MAILCHIMP_SERVER,
+});
 
 const authController = {
   register: async (req, res) => {
     try {
-      const {
-        uid,
-        firstname,
-        lastname,
-        email,
-        phone,
-        ville,
-        departement,
-        adresse,
-        profil,
-        mobilite,
-        siret
-      } = req.body;
+      const body = req.body
+
       const newUser = new Users({
-        uid: uid,
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        phone: phone,
-        ville: ville,
-        departement: departement,
-        adresse: adresse,
-        profil: profil,
-        mobilite: mobilite,
-        siret: siret,
+        uid: body.uid,
+        firstname: body.firstname,
+        lastname: body.lastname,
+        email: body.email,
+        phone: body.phone,
+        ville: body.ville,
+        departement: body.departement,
+        adresse: body.adresse,
+        profil: body.profil,
+        mobilite: body.mobilite,
+        siret: body.siret,
         status: false,
       });
       await newUser.save();
+
+      const subscribingUser = {
+        firstName: body.firstname,
+        lastName: body.lastname,
+        email: body.email
+      };
+
+      await mailchimp.lists.addListMember(process.env.MAILCHIMP_LIST_ID, {
+        email_address: subscribingUser.email,
+        status: "subscribed",
+        merge_fields: {
+          FNAME: subscribingUser.firstName,
+          LNAME: subscribingUser.lastName
+        }
+      });
+
       return res.status(200).json({
         status: 200,
         message: "Votre compte a été crée, activer votre compte en allant dans votre boite e-mail",
       });
-    } catch (err) {
-      return res.status(500).json({
-        status: 500,
-        message: err.message,
+    } catch (error) {
+      return res.status(error.status).send({
+        status: error.status,
+        error: error.message
       });
     }
   },

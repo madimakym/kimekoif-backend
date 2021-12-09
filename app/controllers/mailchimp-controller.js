@@ -22,7 +22,6 @@ const MailchimpCtrl = {
     subscribeContact: async (req, res) => {
         try {
             const body = req.body
-
             const subscribingUser = {
                 firstName: body.firstname,
                 lastName: body.lastname,
@@ -37,7 +36,6 @@ const MailchimpCtrl = {
                     LNAME: subscribingUser.lastName
                 }
             });
-            console.log("response:", response)
             res.send({ response });
         } catch (error) {
             return res.status(error.status).send({
