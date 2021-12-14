@@ -27,6 +27,9 @@ const UserSchema = new mongoose.Schema({
   adresse: {
     type: String,
   },
+  quartier: {
+    type: String,
+  },
   siret: {
     type: String,
   },
@@ -90,7 +93,7 @@ const UserSchema = new mongoose.Schema({
     ref: 'Commentaire'
   }],
 }, {
-  timestamps: true,
+  timestamps: true
 });
 UserSchema.method("toJSON", function () {
   const {

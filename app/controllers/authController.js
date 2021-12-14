@@ -20,6 +20,7 @@ const authController = {
         ville: body.ville,
         departement: body.departement,
         adresse: body.adresse,
+        quartier: body.quartier,
         profil: body.profil,
         mobilite: body.mobilite,
         siret: body.siret,
