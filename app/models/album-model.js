@@ -6,18 +6,22 @@ const AlbumSchema = new mongoose.Schema(
       type: String,
     },
     visual: {
-      type: String,
+      type: Array,
     },
     users: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users"
     },
+    services: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service'
+    },
     status: {
-      type: Boolean,
+      type: Boolean
     }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 AlbumSchema.method("toJSON", function () {

@@ -11,6 +11,7 @@ const AlbumCtrl = {
                 libelle: body.libelle,
                 visual: body.visual,
                 users: body.userId,
+                services: body.serviceId,
                 status: body.status ? body.status : true
             });
             const savedAlbum = await album.save();
@@ -32,7 +33,15 @@ const AlbumCtrl = {
         try {
             const user = await Album.find({
                 $or: [{ libelle: req.body.libelle, users: req.body.userId }],
-            }).sort({ createdAt: "desc" });
+            }).sort({ createdAt: "desc" }).populate([{
+                path: "services",
+                select: ['libelle'],
+                populate: {
+                    path: "services",
+                    model: "Service",
+                },
+            }]);
+
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -57,20 +66,31 @@ const AlbumCtrl = {
 
     delete: async (req, res) => {
         const body = req.body
+        // try {
+        //     const user = await User.findById(body.userId)
+        //     var index = user.albums.indexOf(body.albumId);
+        //     if (index > -1) { user.albums.splice(index, 1) }
+        //     await user.save()
+        //     await Album.findByIdAndRemove(body.albumId);
+        //     return res.status(200).json({
+        //         status: 200,
+        //         message: "Image supprimée",
+        //     });
+        // } catch (error) {
+        //     return res.status(500).json({
+        //         status: 500,
+        //         message: error.message,
+        //     });
+        // }
         try {
-            const user = await User.findById(body.userId)
-            var index = user.albums.indexOf(body.albumId);
-            if (index > -1) { user.albums.splice(index, 1) }
-            await user.save()
             await Album.findByIdAndRemove(body.albumId);
             return res.status(200).json({
                 status: 200,
-                message: "Image supprimée",
+                message: "Catalogue supprimé",
             });
         } catch (error) {
             return res.status(500).json({
-                status: 500,
-                message: error.message,
+                message: error.message
             });
         }
     },
