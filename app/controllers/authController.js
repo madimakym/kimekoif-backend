@@ -63,20 +63,7 @@ const authController = {
       const { uid } = req.body;
       const user = await Users.findOne({
         uid: uid
-      }).populate([
-        {
-          path: "adresses",
-          populate: {
-            path: "adresses",
-            model: "Adresse",
-          },
-        }
-      ]);
-      if (!user)
-        return res.status(400).json({
-          status: 400,
-          message: "Cet utilisateur n'existe pas.",
-        });
+      })
       res.status(200).json({
         id: user.id,
         uid: user.uid,
@@ -84,7 +71,8 @@ const authController = {
         lastname: user.lastname,
         profil: user.profil,
         avatar: user.avatar,
-        adresses: user.adresses
+        adresses: user.adresses,
+        status: user.status
       });
     } catch (err) {
       return res.status(500).json({
