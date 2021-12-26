@@ -25,7 +25,8 @@ const MailchimpCtrl = {
             const subscribingUser = {
                 firstName: body.firstname,
                 lastName: body.lastname,
-                email: body.email
+                email: body.email,
+                profile: body.profile
             };
 
             const response = await mailchimp.lists.addListMember(process.env.MAILCHIMP_LIST_ID, {
@@ -33,7 +34,8 @@ const MailchimpCtrl = {
                 status: "subscribed",
                 merge_fields: {
                     FNAME: subscribingUser.firstName,
-                    LNAME: subscribingUser.lastName
+                    LNAME: subscribingUser.lastName,
+                    PROFILE: subscribingUser.profile
                 }
             });
             res.send({ response });

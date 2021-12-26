@@ -29,19 +29,38 @@ const AlbumCtrl = {
         }
     },
 
+    // findByUser: async (req, res) => {
+    //     try {
+    //         const user = await Album.find({
+    //             $or: [{ libelle: req.body.libelle, users: req.body.userId }],
+    //         }).sort({ createdAt: "desc" }).populate([{
+    //             path: "services",
+    //             select: ['libelle'],
+    //             populate: {
+    //                 path: "services",
+    //                 model: "Service",
+    //             },
+    //         }]);
+
+    //         return res.status(200).json(user);
+    //     } catch (error) {
+    //         return res.status(500).json({
+    //             status: 500,
+    //             message: "Aucun resultat"
+    //         });
+    //     }
+    // },
+
     findByUser: async (req, res) => {
+        const body = req.body
         try {
             const user = await Album.find({
-                $or: [{ libelle: req.body.libelle, users: req.body.userId }],
-            }).sort({ createdAt: "desc" }).populate([{
-                path: "services",
-                select: ['libelle'],
-                populate: {
-                    path: "services",
-                    model: "Service",
-                },
-            }]);
-
+                $or: [{
+                    users: body.userId
+                }],
+            }).sort({
+                createdAt: "desc"
+            });
             return res.status(200).json(user);
         } catch (error) {
             return res.status(500).json({
@@ -50,6 +69,7 @@ const AlbumCtrl = {
             });
         }
     },
+
 
     findOne: async (req, res) => {
         try {

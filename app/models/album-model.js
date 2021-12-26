@@ -6,7 +6,7 @@ const AlbumSchema = new mongoose.Schema(
       type: String,
     },
     visual: {
-      type: Array,
+      type: String,
     },
     users: {
       type: mongoose.Schema.Types.ObjectId,

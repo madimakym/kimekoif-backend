@@ -32,7 +32,8 @@ const authController = {
       const subscribingUser = {
         firstName: body.firstname,
         lastName: body.lastname,
-        email: body.email
+        email: body.email,
+        profile: (body.profile === "customer") ? "Cliente" : "Coiffeuse",
       };
 
       await mailchimp.lists.addListMember(process.env.MAILCHIMP_LIST_ID, {
@@ -40,7 +41,8 @@ const authController = {
         status: "subscribed",
         merge_fields: {
           FNAME: subscribingUser.firstName,
-          LNAME: subscribingUser.lastName
+          LNAME: subscribingUser.lastName,
+          PROFILE: subscribingUser.profile
         }
       });
 
