@@ -26,6 +26,9 @@ const authController = {
         mobilite: body.mobilite,
         siret: body.siret,
         status: false,
+        // stripe_account_id: "",
+        // stripe_seller: "",
+        // stripe_session: "",
       });
       await newUser.save();
 

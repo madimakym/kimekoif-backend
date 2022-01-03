@@ -16,6 +16,7 @@ module.exports = (app) => {
   const wish = require("../controllers/wish-controller");
   const stripe = require("../controllers/stripe-controller");
   const mailchimp = require("../controllers/mailchimp-controller");
+  const order = require("../controllers/order-controller");
 
   var router = require("express").Router();
 
@@ -40,6 +41,11 @@ module.exports = (app) => {
   router.post("/user/commande/", commande.findByUser);
   router.put("/commande/:id", commande.update);
 
+  router.get("/orders", order.findAll);
+  router.get("/order/:id", order.findOne);
+  router.delete("/order/:id", order.delete);
+  router.post("/user/order/", order.findByUser);
+  router.put("/order/:id", order.update);
 
   router.post("/disponibilite", disponibilite.create);
   router.get("/disponibilite/:id", disponibilite.findOne);
@@ -93,7 +99,17 @@ module.exports = (app) => {
   router.post("/stripe/get-account-balance", stripe.getAccountBalance);
   router.post("/stripe/payout-setting", stripe.payoutSetting);
   router.post("/stripe/session-id", stripe.sessionId);
+  router.get("/stripe/order/success/:session_id", stripe.orderSuccess);
+
+  // Order
+  router.post("/stripe/stripe-request-success", stripe.stripeRequestSuccess);
+
+  // router.post("/stripe/payout-list", stripe.payoutList);
   // router.post("/stripe/onboard-user/refresh", stripe.onboardUserRefresh);
+
+  // Order
+  // router.post("/stripe/stripe-success-request", stripe.sessionId);
+
 
 
   // MAILCHIMP

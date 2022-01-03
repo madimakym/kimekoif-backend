@@ -3,6 +3,7 @@ const stripeKey = require("../../utils/keys").stripeKey;
 const queryString = require('query-string');
 const stripe = Stripe(stripeKey);
 const User = require("../models/user-model");
+const Order = require("../models/order-model");
 const Service = require("../models/service-model");
 
 // const updateDelayDays = (accountID) => {
@@ -136,20 +137,19 @@ const StripeCtrl = {
                 model: "Users",
                 select: 'stripe_account_id'
             }]);
-            const fee = (item.price * 20) / 100;
-
+            const fee = (item.price * 10) / 100;
             const session = await stripe.checkout.sessions.create({
                 line_items: [
                     {
                         name: item.libelle,
-                        amount: item.price * 100,
+                        amount: (item.price * 100) + (3.5 * 100),
                         currency: "eur",
                         quantity: 1
                     },
                 ],
                 mode: 'payment',
-                success_url: 'https://www.kimekoif.com/success',
-                cancel_url: 'https://www.kimekoif.com/failure',
+                success_url: `${process.env.STRIPE_SUCCESS_URL}/${item._id}/${item.users._id}`,
+                cancel_url: process.env.STRIPE_CANCEL_URL,
                 payment_intent_data: {
                     application_fee_amount: fee * 100,
                     //this seller can see his balance in our frontend dashboard
@@ -173,6 +173,57 @@ const StripeCtrl = {
                 status: 500,
                 error: err.message,
             });
+        }
+    },
+
+    orderSuccess: async (req, res) => {
+        try {
+            const session = await stripe.checkout.sessions.retrieve(req.params.session_id);
+            console.log("session:", session)
+        } catch (error) {
+            console.log("error:", error)
+        }
+    },
+
+    stripeRequestSuccess: async (req, res) => {
+        try {
+            const body = req.body
+            await new Order({
+                service: body.serviceId,
+                customer: body.customerId,
+                hairdresser: body.hairdresserId,
+                status: true
+            }).save();
+            return res.status(200).json({
+                status: 200,
+                message: "Commande ajoutée"
+            })
+            // // retrieve stripe session, based on session id we previously save in user db
+            // const session = await stripe.checkout.sessions.retrieve(user.stripe_session.id);
+            // // if session payment status id paid, create order
+            // if (session.payment_status === "paid") {
+            //     // check if order with that session id already exist by querying orders collection 
+            //     const orderExist = await Order.findById({ "session.id": session.id }); s
+            //     if (orderExist) {
+            //         // if order exist, send success true
+            //         res.json({ success: true });
+            //     } else {
+            //         // else create new order and send success true
+            //         let newOrder = await new Order({
+            //             service: serviceId,
+            //             session,
+            //             orderedBy: user._id,
+            //         }).save();
+            //         // remove user's stripeSession
+            //         await User.findByIdAndUpdate(user._id, {
+            //             $set: { stripe_session: {} }
+            //         });
+            //         res.json({ success: true })
+            //     }
+            // }
+
+        } catch (error) {
+            console.log("STRIPE SUCCESS ERROR:", error)
         }
     },
 };
