@@ -35,7 +35,7 @@ const authController = {
         firstName: body.firstname,
         lastName: body.lastname,
         email: body.email,
-        profile: (body.profile === "customer") ? "Cliente" : "Coiffeuse",
+        profile: (body.profil === "customer") ? "Cliente" : "Coiffeuse",
       };
 
       await mailchimp.lists.addListMember(process.env.MAILCHIMP_LIST_ID, {
