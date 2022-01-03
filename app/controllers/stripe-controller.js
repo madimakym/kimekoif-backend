@@ -58,7 +58,7 @@ const StripeCtrl = {
         try {
             const body = req.body
             const user = await User.findById(body.hairdresserId);
-            if (!user?.stripe_account_id) {
+            if (!user.stripe_account_id) {
                 const account = await stripe.accounts.create({ type: "express" });
                 user.stripe_account_id = account.id;
                 user.save()
