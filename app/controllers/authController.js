@@ -10,7 +10,6 @@ const authController = {
   register: async (req, res) => {
     try {
       const body = req.body
-
       const newUser = new Users({
         uid: body.uid,
         firstname: body.firstname,
@@ -64,9 +63,7 @@ const authController = {
   login: async (req, res) => {
     try {
       const { uid } = req.body;
-      const user = await Users.findOne({
-        uid: uid
-      })
+      const user = await Users.findOne({ uid: uid })
       res.status(200).json({
         id: user.id,
         uid: user.uid,
