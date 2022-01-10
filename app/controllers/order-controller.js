@@ -44,7 +44,7 @@ const OrderCtrl = {
                 },
                 {
                     path: "customer",
-                    select: ['id'],
+                    select: ['id', 'firstname', 'lastname', 'profil'],
                     populate: {
                         path: "customer",
                         model: "Users",
@@ -52,7 +52,7 @@ const OrderCtrl = {
                 },
                 {
                     path: "hairdresser",
-                    select: ['id'],
+                    select: ['id', 'firstname', 'lastname', 'profil'],
                     populate: {
                         path: "hairdresser",
                         model: "Users",

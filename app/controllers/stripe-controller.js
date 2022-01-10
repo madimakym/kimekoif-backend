@@ -19,7 +19,6 @@ const Service = require("../models/service-model");
 //     return account;
 // }
 
-
 const StripeCtrl = {
     paymentintent: async (req, res) => {
         try {
@@ -138,6 +137,7 @@ const StripeCtrl = {
                 select: 'stripe_account_id'
             }]);
             const fee = (item.price * 10) / 100;
+            console.log("Item =>", item);
             const session = await stripe.checkout.sessions.create({
                 line_items: [
                     {
@@ -159,14 +159,12 @@ const StripeCtrl = {
                 },
             });
 
-            const userUpdate = await User.findByIdAndUpdate(item.users._id, { stripe_session: session }, {
+            await User.findByIdAndUpdate(item.users._id, { stripe_session: session }, {
                 new: true
             });
             res.send({
                 sessionId: session.id
             });
-
-            console.log("userUpdate ===>", userUpdate);
             console.log("SESSIONS ===>", session);
         } catch (err) {
             return res.status(500).json({
@@ -188,43 +186,48 @@ const StripeCtrl = {
     stripeRequestSuccess: async (req, res) => {
         try {
             const body = req.body
-            await new Order({
-                service: body.serviceId,
-                customer: body.customerId,
-                hairdresser: body.hairdresserId,
-                status: true
-            }).save();
-            return res.status(200).json({
-                status: 200,
-                message: "Commande ajoutée"
-            })
-            // // retrieve stripe session, based on session id we previously save in user db
-            // const session = await stripe.checkout.sessions.retrieve(user.stripe_session.id);
-            // // if session payment status id paid, create order
-            // if (session.payment_status === "paid") {
-            //     // check if order with that session id already exist by querying orders collection 
-            //     const orderExist = await Order.findById({ "session.id": session.id }); s
-            //     if (orderExist) {
-            //         // if order exist, send success true
-            //         res.json({ success: true });
-            //     } else {
-            //         // else create new order and send success true
-            //         let newOrder = await new Order({
-            //             service: serviceId,
-            //             session,
-            //             orderedBy: user._id,
-            //         }).save();
-            //         // remove user's stripeSession
-            //         await User.findByIdAndUpdate(user._id, {
-            //             $set: { stripe_session: {} }
-            //         });
-            //         res.json({ success: true })
-            //     }
-            // }
-
+            const session = await stripe.checkout.sessions.retrieve(body.sessionId);
+            if (session.payment_status === "paid") {
+                await new Order({
+                    service: body.serviceId,
+                    customer: body.customerId,
+                    hairdresser: body.hairdresserId,
+                    payment_id: session.payment_intent,
+                    payment_status: "Payée",
+                    status: true
+                }).save();
+                return res.status(200).json({
+                    status: 200,
+                    message: "Commande ajoutée"
+                })
+            }
         } catch (error) {
             console.log("STRIPE SUCCESS ERROR:", error)
         }
     },
+
+    stripeRefund: async (req, res) => {
+        try {
+            const body = req.body
+            const session = await stripe.refunds.create({ payment_intent: body.payment_id });
+            const order = await Order.findById(body.orderId);
+
+            console.log("session:", session);
+            console.log("order:", order);
+
+            if (session.status === "succeeded") {
+                await Order.findByIdAndUpdate(body.orderId, { payment_status: "Annulée" }, {
+                    new: true
+                });
+                return res.status(200).json({
+                    status: 200,
+                    message: "Commande annulée"
+                })
+            }
+        } catch (error) {
+            console.log("STRIPE SUCCESS ERROR:", error)
+        }
+    },
+
 };
 module.exports = StripeCtrl;

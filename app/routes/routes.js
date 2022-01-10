@@ -100,6 +100,8 @@ module.exports = (app) => {
   router.post("/stripe/payout-setting", stripe.payoutSetting);
   router.post("/stripe/session-id", stripe.sessionId);
   router.get("/stripe/order/success/:session_id", stripe.orderSuccess);
+  router.post("/stripe/refund", stripe.stripeRefund);
+
 
   // Order
   router.post("/stripe/stripe-request-success", stripe.stripeRequestSuccess);

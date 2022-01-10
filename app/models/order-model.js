@@ -14,7 +14,12 @@ const OrderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users"
   },
-
+  payment_id: {
+    type: String,
+  },
+  payment_status: {
+    type: String,
+  },
   status: {
     type: Boolean,
   }
