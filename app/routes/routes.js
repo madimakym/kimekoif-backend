@@ -17,6 +17,7 @@ module.exports = (app) => {
   const stripe = require("../controllers/stripe-controller");
   const mailchimp = require("../controllers/mailchimp-controller");
   const order = require("../controllers/order-controller");
+  const mail = require("../controllers/send-mail-controller");
 
   var router = require("express").Router();
 
@@ -119,6 +120,11 @@ module.exports = (app) => {
   router.post("/mailchimp/subscribe-contact", mailchimp.subscribeContact);
   router.post("/mailchimp/unsubscribe-contact", mailchimp.check);
   router.post("/mailchimp/check-contact", mailchimp.check);
+
+
+  // SEND MAIL
+  router.post("/mail/send", mail.sendEmail);
+
 
 
   app.use("/api/", router);
