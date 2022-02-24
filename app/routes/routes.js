@@ -34,6 +34,8 @@ module.exports = (app) => {
 
   router.post("/auth/login", auth.login);
   router.post("/auth/register", auth.register);
+  router.post("/auth/forget-password", auth.forgetPassword);
+  router.post("/auth/reset-password", auth.resetPassword);
 
   router.post("/commande", commande.create);
   router.get("/commandes", commande.findAll);

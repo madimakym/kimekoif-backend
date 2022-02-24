@@ -56,7 +56,7 @@ const userCtrl = {
     findOne: async (req, res) => {
         try {
             const response = await User.findOne({
-                uid: req.params.id
+                _id: req.params.id
             }).populate([{
                 path: "services",
                 populate: {
