@@ -85,6 +85,7 @@ module.exports = (app) => {
   router.get("/user", user.findAll);
   router.post("/user", user.findbyProfil);
   router.post("/user/search", user.search);
+  router.post("/user/uid", user.searchByUid);
   router.get("/user/:id", user.findOne);
   router.put("/user/:id", user.update);
 

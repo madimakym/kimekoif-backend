@@ -156,6 +156,28 @@ const userCtrl = {
                 message: err.message
             });
         }
+    },
+
+    searchByUid: async (req, res) => {
+        const body = req.body
+        try {
+            const user = await User.findOne({ uid: { $regex: new RegExp(body.uid, "i") }, });
+            return res.status(200).json({
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                profil: user.profil,
+                avatar: user.avatar,
+                adresses: user.adresses,
+                status: user.status
+            });
+        } catch (err) {
+            return res.status(500).json({
+                message: err.message
+            });
+        }
     }
+
+
 };
 module.exports = userCtrl;
