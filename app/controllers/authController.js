@@ -1,4 +1,6 @@
-const Users = require("../models/user-model");
+// const Users = require("../models/user-model");
+import Users from "../models/user-model"
+import jwt from 'jsonwebtoken';
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 var generator = require("generate-password");
 const bcrypt = require("bcrypt");
@@ -40,15 +42,20 @@ const authController = {
   register: async (req, res) => {
     try {
       const body = req.body
-      const user = await Users.findOne({
-        email: body.email
-      });
+      const user = await Users.findOne({ email: body.email });
       if (user)
         return res.status(400).send({
           status: 400,
           message: "Adresse email existante",
         });
+
       const passwordHash = await bcrypt.hash(body.password, 10);
+      if (body.password !== body.passwordconfirm) {
+        return res.status(400).send({
+          status: 400,
+          message: "Les mots de passe ne sont pas identiques!",
+        });
+      }
       const newUser = new Users({
         firstname: body.firstname,
         lastname: body.lastname,
@@ -60,7 +67,7 @@ const authController = {
         adresse: body.adresse,
         quartier: body.quartier,
         description: body.description,
-        profil: body.profil,
+        profile: body.profile,
         mobilite: body.mobilite,
         siret: body.siret,
         status: false
@@ -98,13 +105,9 @@ const authController = {
 
   login: async (req, res) => {
     try {
-      const {
-        email,
-        password
-      } = req.body;
-      const user = await Users.findOne({
-        email: email
-      });
+      const { email, password } = req.body;
+      let user = await Users.findOne({ email: email }).exec();
+
       if (!user)
         return res.status(400).send({
           status: 400,
@@ -116,14 +119,19 @@ const authController = {
           status: 400,
           message: "Mot de passe incorrect!",
         });
-      res.status(200).json({
-        id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        profil: user.profil,
-        avatar: user.avatar,
-        adresses: user.adresses,
-        status: user.status
+      let token = jwt.sign({ _id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.json({
+        token, user: {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          status: user.status
+        }
       });
     } catch (err) {
       return res.status(500).json({
@@ -135,12 +143,8 @@ const authController = {
 
   forgetPassword: async (req, res) => {
     try {
-      const {
-        email
-      } = req.body;
-      const user = await Users.findOne({
-        email: email
-      });
+      const { email } = req.body;
+      const user = await Users.findOne({ email: email });
       if (!user)
         return res.status(400).send({
           status: 400,
@@ -153,10 +157,10 @@ const authController = {
       const passwordHash = await bcrypt.hash(newpassword, 10);
       const user2 = await Users.findByIdAndUpdate(
         user.id, {
-          password: passwordHash
-        }, {
-          useFindAndModify: false
-        }
+        password: passwordHash
+      }, {
+        useFindAndModify: false
+      }
       );
       if (!user2) {
         return res.status(400).send({
@@ -214,10 +218,10 @@ const authController = {
           const passwordHash = await bcrypt.hash(newpassword, 10);
           const user = await Users.findByIdAndUpdate(
             id, {
-              password: passwordHash
-            }, {
-              useFindAndModify: false,
-            }
+            password: passwordHash
+          }, {
+            useFindAndModify: false,
+          }
           );
           if (!user) {
             return res.status(400).send({

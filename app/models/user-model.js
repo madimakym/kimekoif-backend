@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
   mobilite: {
     type: String,
   },
-  profil: {
+  profile: {
     type: String,
   },
   avatar: {
