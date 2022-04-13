@@ -89,6 +89,7 @@ module.exports = (app) => {
   router.get("/user/:id", user.findOne);
   router.put("/user/:id", user.update);
 
+
   router.post("/upload", upload.upload);
 
   router.post("/wish", wish.create);

@@ -128,8 +128,7 @@ const authController = {
           firstname: user.firstname,
           lastname: user.lastname,
           email: user.email,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
+          profile: user.profile,
           status: user.status
         }
       });
