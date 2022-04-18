@@ -119,7 +119,7 @@ const authController = {
           status: 400,
           message: "Mot de passe incorrect!",
         });
-      let token = jwt.sign({ _id: user.id }, process.env.JWT_SECRET, {
+      let token = jwt.sign({ user }, process.env.JWT_SECRET, {
         expiresIn: "7d",
       });
       res.json({

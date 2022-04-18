@@ -1,10 +1,12 @@
 import formidable from "express-formidable";
+import { requireSignin } from "../middlewares";
 
 module.exports = (app) => {
   const adresse = require("../controllers/adresseController");
   const album = require("../controllers/albumController");
   const auth = require("../controllers/authController");
   const commande = require("../controllers/commande-controller");
+  const catalog = require("../controllers/catalog-controller");
   const commentaire = require("../controllers/commentaire-controller");
   const checkout = require("../controllers/checkoutController");
   const disponibilite = require("../controllers/disponibiliteController");
@@ -82,6 +84,10 @@ module.exports = (app) => {
   // router.post("/service/delete/", service.delete);
   // router.post("/service/search", service.search);
   // router.post("/user/service/", service.findByUser);
+
+  router.post("/catalog", formidable(), catalog.create);
+  router.get("/catalog", requireSignin, catalog.findAll);
+
 
   router.post("/stripe/charge/", checkout.payment);
 

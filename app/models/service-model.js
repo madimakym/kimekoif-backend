@@ -8,15 +8,13 @@ const ServiceSchema = new mongoose.Schema(
     price: {
       type: String,
     },
-    description: {
-      type: String,
-    },
     users: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users"
     },
-    visual: {
-      type: Array,
+    catalog: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service"
     },
     status: {
       type: Boolean,
