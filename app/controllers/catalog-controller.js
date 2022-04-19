@@ -28,17 +28,15 @@ export const create = async (req, res) => {
 };
 
 export const findAll = async (req, res) => {
-    console.log("user ===> ", req.user)
+    try {
+        const response = await Catalog.find();
+        return res.status(200).json(response);
+    } catch (err) {
+        return res.status(400).json({
+            status: 400,
+            message: err.message,
+        });
+    }
+    // console.log("user ===> ", req.user)
 
-    // try {
-
-    //     console.log("user ===> ", req)
-    //     // const response = await Catalog.find()
-    //     // return res.status(200).json(response);
-    // } catch (err) {
-    //     console.log("error ==>", err);
-    //     res.status(400).json({
-    //         err: err.message
-    //     });
-    // }
 }

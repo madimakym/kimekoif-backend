@@ -4,7 +4,7 @@ import { requireSignin } from "../middlewares";
 module.exports = (app) => {
   const adresse = require("../controllers/adresseController");
   const album = require("../controllers/albumController");
-  const auth = require("../controllers/authController");
+  const auth = require("../controllers/auth-controller");
   const commande = require("../controllers/commande-controller");
   const catalog = require("../controllers/catalog-controller");
   const commentaire = require("../controllers/commentaire-controller");
@@ -15,7 +15,7 @@ module.exports = (app) => {
   const rdv = require("../controllers/rdvController");
   // const service = require("../controllers/serviceController");
   const service = require("../controllers/service-controller");
-  const user = require("../controllers/userController");
+  const user = require("../controllers/user-controller");
   const upload = require("../controllers/uploadfileController");
   const wish = require("../controllers/wish-controller");
   const stripe = require("../controllers/stripe-controller");
@@ -88,15 +88,13 @@ module.exports = (app) => {
   router.post("/catalog", formidable(), catalog.create);
   router.get("/catalog", requireSignin, catalog.findAll);
 
+  router.get("/user/:id", requireSignin, user.findOne);
+  router.put("/user/:id", requireSignin, user.update);
 
-  router.post("/stripe/charge/", checkout.payment);
-
-  router.get("/user", user.findAll);
-  router.post("/user", user.findbyProfil);
-  router.post("/user/search", user.search);
-  router.post("/user/uid", user.searchByUid);
-  router.get("/user/:id", user.findOne);
-  router.put("/user/:id", user.update);
+  // router.post("/user", user.findbyProfil);
+  // router.post("/user/search", user.search);
+  // router.post("/user/uid", user.searchByUid);
+  // router.get("/user/:id", user.findOne);
 
 
   router.post("/upload", upload.upload);

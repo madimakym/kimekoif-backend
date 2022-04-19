@@ -46,4 +46,11 @@ app.get('/', function (req, res) {
   res.render('portfolio')
 });
 require("./app/routes/routes.js")(app);
+app.use((err, req, res, next) => {
+  res.status(500).json({
+    success: false,
+    message: 'No token provided.',
+  });
+});
+
 app.use(express.static("public"));
