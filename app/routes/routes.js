@@ -78,10 +78,9 @@ module.exports = (app) => {
   router.post("/pro/rdv/", rdv.findByUser);
   router.post("/customer/rdv/", rdv.findByCustomer);
 
-  // router.post("/service", formidable(), service.create);
-  router.post("/service", requireSignin, service.create);
+  router.post("/service/create", requireSignin, service.create);
   router.post("/user/service/", requireSignin, service.findByUser);
-  // router.post("/service/delete/", service.delete);
+  router.post("/service/delete/", requireSignin, service.remove);
   // router.post("/service/search", service.search);
   // router.post("/user/service/", service.findByUser);
 
