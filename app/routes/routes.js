@@ -79,13 +79,13 @@ module.exports = (app) => {
   router.post("/customer/rdv/", rdv.findByCustomer);
 
   router.post("/service/create", requireSignin, service.create);
-  router.post("/user/service/", requireSignin, service.findByUser);
-  router.post("/service/delete/", requireSignin, service.remove);
-  // router.post("/service/search", service.search);
-  // router.post("/user/service/", service.findByUser);
+  router.post("/service/delete", requireSignin, service.remove);
+  router.post("/user/service", requireSignin, service.findByUser);
 
-  router.post("/catalog", formidable(), catalog.create);
-  router.get("/catalog", requireSignin, catalog.findAll);
+  router.post("/catalog/create", requireSignin, formidable(), catalog.create);
+  router.post("/catalog/delete", requireSignin, catalog.remove);
+  router.post("/user/catalog", requireSignin, catalog.findByUser);
+  router.get("/catalog/image/:catalogId", catalog.image);
 
   router.get("/user/:id", requireSignin, user.findOne);
   router.put("/user/:id", requireSignin, user.update);
