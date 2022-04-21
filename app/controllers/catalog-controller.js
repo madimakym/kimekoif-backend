@@ -67,6 +67,7 @@ export const image = async (req, res) => {
     let catalog = await Catalog.findById(req.params.catalogId).exec();
     if (catalog && catalog.image && catalog.image.data !== null) {
         res.set('Content-Type', catalog.image.contentType);
+        console.log("catalog.image.data: ===>", catalog.image.data)
         return res.send(catalog.image.data);
     }
 }
