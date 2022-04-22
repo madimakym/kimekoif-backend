@@ -9,11 +9,10 @@ module.exports = (app) => {
   const catalog = require("../controllers/catalog-controller");
   const commentaire = require("../controllers/commentaire-controller");
   const checkout = require("../controllers/checkoutController");
-  const disponibilite = require("../controllers/disponibiliteController");
+  const disponibilite = require("../controllers/disponibilite-controller");
   const facture = require("../controllers/factureController");
   const product = require("../controllers/product-controller");
   const rdv = require("../controllers/rdvController");
-  // const service = require("../controllers/serviceController");
   const service = require("../controllers/service-controller");
   const user = require("../controllers/user-controller");
   const upload = require("../controllers/uploadfileController");
@@ -54,10 +53,9 @@ module.exports = (app) => {
   router.post("/user/order/", order.findByUser);
   router.put("/order/:id", order.update);
 
-  router.post("/disponibilite", disponibilite.create);
-  router.get("/disponibilite/:id", disponibilite.findOne);
-  router.post("/disponibilite/delete/", disponibilite.delete);
-  router.post("/user/disponibilite/", disponibilite.findByUser);
+  router.post("/disponibilite/create/", requireSignin, disponibilite.create);
+  router.post("/disponibilite/delete/", requireSignin, disponibilite.remove);
+  router.post("/user/disponibilite/", requireSignin, disponibilite.findByUser);
 
   router.post("/facture", facture.create);
   router.post("/pro/facture/", facture.findByUser);

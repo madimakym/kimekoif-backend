@@ -1,30 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose"
+const { Schema } = mongoose
+const { ObjectId } = mongoose.Schema
 
-const DisponibiliteSchema = new mongoose.Schema({
+const disponibiliteSchema = new Schema({
   start: {
     type: String,
   },
   end: {
     type: String,
   },
-  users: {
-    type: mongoose.Schema.Types.ObjectId,
+  user: {
+    type: ObjectId,
     ref: "Users"
   },
   status: {
-    type: Boolean,
+    type: Boolean
   }
-}, {
-  timestamps: true,
-});
-DisponibiliteSchema.method("toJSON", function () {
-  const {
-    __v,
-    _id,
-    ...object
-  } = this.toObject();
-  object.id = _id;
-  return object;
-});
+},
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Disponibilite", DisponibiliteSchema);
+export default mongoose.model('Disponibilite', disponibiliteSchema);
