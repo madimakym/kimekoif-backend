@@ -12,10 +12,6 @@ const ServiceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users"
     },
-    catalog: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Service"
-    },
     status: {
       type: Boolean,
     }

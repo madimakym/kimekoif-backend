@@ -8,12 +8,11 @@ const catalogSchema = new Schema({
         ref: 'Service'
     },
     user: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Users"
     },
     image: {
-        data: Buffer,
-        contentType: String
+        type: String,
     },
     status: {
         type: Boolean

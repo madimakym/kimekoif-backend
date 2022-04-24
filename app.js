@@ -9,6 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+global.__basedir = __dirname;
+
 // Session
 app.use(
   session({

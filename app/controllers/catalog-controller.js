@@ -1,43 +1,49 @@
+const upload = require("../middlewares/upload");
 import Catalog from "../models/catalog-model";
-import fs from "fs";
+var multer = require("multer");
+
 
 export const create = async (req, res) => {
     try {
-        let fields = req.fields;
-        let files = req.files;
-        let catalog = new Catalog({
-            user: fields.user,
-            service: fields.service,
-            status: true
+        upload(req, res, function (err) {
+            const body = req.body
+            let catalog = new Catalog({
+                user: body.user,
+                service: body.service,
+                image: req.files[0].filename,
+                status: true
+            });
+            catalog.save()
+            if (err instanceof multer.MulterError) {
+                return res.status(500).json(err);
+            } else if (err) {
+                return res.status(500).json(err);
+            }
+            return res.status(200).json({
+                success: true,
+                message: "Catalogue ajouté",
+            })
         });
-
-        if (files.image) {
-            catalog.image.data = fs.readFileSync(files.image.path);
-            catalog.image.contentType = files.image.type;
-        }
-
-        await catalog.save()
-        return res.status(200).json({
-            success: true,
-            message: "Catalogue ajouté",
-        })
-    } catch (err) {
-        return res.status(500).json({
-            success: false,
-            message: err.message,
-        });
+    } catch (error) {
+        console.log("error ===>", error);
     }
 };
 
+
 export const findByUser = async (req, res) => {
     try {
-        const body = req.body
-        const catalog = await Catalog.find({
-            $or: [{ user: body.user }],
-        }, '_id').sort({ createdAt: "desc" });
-
-        return res.json(catalog);
-
+        const user = await Catalog.find({
+            $or: [{
+                user: req.body.user
+            }],
+        }).populate([{
+            path: "service",
+            populate: {
+                path: "service",
+                model: "Service",
+            },
+        }]);
+        return res.json(user);
     } catch (error) {
         return res.status(500).json({
             status: 500,

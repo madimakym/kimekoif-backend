@@ -1,5 +1,17 @@
 import formidable from "express-formidable";
 import { requireSignin } from "../middlewares";
+// var multer = require('multer');
+// const upload = multer({ dest: './public/data/uploads/' });
+// const upload = multer({ storage: storage });
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, './public/data/uploads/')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + '-' + Date.now())
+//   }
+// })
+
 
 module.exports = (app) => {
   const adresse = require("../controllers/adresseController");
@@ -15,7 +27,7 @@ module.exports = (app) => {
   const rdv = require("../controllers/rdvController");
   const service = require("../controllers/service-controller");
   const user = require("../controllers/user-controller");
-  const upload = require("../controllers/uploadfileController");
+  // const upload = require("../controllers/uploadfileController");
   const wish = require("../controllers/wish-controller");
   const stripe = require("../controllers/stripe-controller");
   const mailchimp = require("../controllers/mailchimp-controller");
@@ -76,11 +88,13 @@ module.exports = (app) => {
   router.post("/pro/rdv/", rdv.findByUser);
   router.post("/customer/rdv/", rdv.findByCustomer);
 
-  router.post("/service/create", requireSignin, service.create);
+  router.post("/service/create", service.create);
   router.post("/service/delete", requireSignin, service.remove);
   router.post("/user/service", requireSignin, service.findByUser);
 
-  router.post("/catalog/create", requireSignin, formidable(), catalog.create);
+  router.post("/catalog/create", catalog.create);
+  // router.post("/catalog/create", upload.single('file'), catalog.create);
+  // router.post("/catalog/create", formidable(), catalog.create);
   router.post("/catalog/delete", requireSignin, catalog.remove);
   router.post("/user/catalog", requireSignin, catalog.findByUser);
   router.get("/catalog/image/:catalogId", catalog.image);
@@ -94,7 +108,7 @@ module.exports = (app) => {
   // router.get("/user/:id", user.findOne);
 
 
-  router.post("/upload", upload.upload);
+  // router.post("/upload", upload.upload);
 
   router.post("/wish", wish.create);
   router.get("/wish/:id", wish.find);

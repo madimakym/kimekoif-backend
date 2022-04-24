@@ -54,13 +54,8 @@ const userSchema = new Schema({
   service: [{
     type: ObjectId,
     ref: 'Service'
-  }],
-  catalog: [{
-    type: ObjectId,
-    ref: 'Catalog'
-  }],
+  }]
 }, {
   timestamps: true
 });
-
 export default mongoose.model('User', userSchema);
