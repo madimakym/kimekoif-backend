@@ -30,9 +30,13 @@ export const findByUser = async (req, res) => {
             $or: [{
                 user: body.user
             }],
-        }).sort({
-            createdAt: "desc"
-        });
+        }).sort({ createdAt: "desc" }).populate([{
+            path: "user",
+            populate: {
+                path: "user",
+                model: "User",
+            },
+        }]);
         return res.status(200).json(user);
     } catch (error) {
         return res.status(500).json({

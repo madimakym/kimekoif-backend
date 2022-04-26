@@ -1,5 +1,7 @@
 const Album = require("../models/album-model");
 const User = require("../models/user-model");
+const Catalog = require("../models/catalog-model");
+
 var _ = require('lodash');
 
 const AlbumCtrl = {

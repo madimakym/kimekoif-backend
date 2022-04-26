@@ -1,6 +1,5 @@
 import mongoose from "mongoose"
 const { Schema } = mongoose
-const { ObjectId } = mongoose.Schema
 
 const userSchema = new Schema({
   firstname: {
@@ -50,11 +49,7 @@ const userSchema = new Schema({
   },
   status: {
     type: Boolean,
-  },
-  service: [{
-    type: ObjectId,
-    ref: 'Service'
-  }]
+  }
 }, {
   timestamps: true
 });

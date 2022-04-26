@@ -1,17 +1,4 @@
-import formidable from "express-formidable";
 import { requireSignin } from "../middlewares";
-// var multer = require('multer');
-// const upload = multer({ dest: './public/data/uploads/' });
-// const upload = multer({ storage: storage });
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './public/data/uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.fieldname + '-' + Date.now())
-//   }
-// })
-
 
 module.exports = (app) => {
   const adresse = require("../controllers/adresseController");
@@ -27,6 +14,7 @@ module.exports = (app) => {
   const rdv = require("../controllers/rdvController");
   const service = require("../controllers/service-controller");
   const user = require("../controllers/user-controller");
+  const search = require("../controllers/search-controller");
   // const upload = require("../controllers/uploadfileController");
   const wish = require("../controllers/wish-controller");
   const stripe = require("../controllers/stripe-controller");
@@ -37,46 +25,14 @@ module.exports = (app) => {
   var router = require("express").Router();
 
 
-  router.post("/adresse/", adresse.create);
-  router.get("/adresse/:id", adresse.find);
-  router.post("/adresse/delete/", adresse.delete);
-
-  router.post("/album", album.create);
-  router.put("/album/:id", album.update);
-  router.get("/album/:id", album.findOne);
-  router.post("/album/delete/", album.delete);
-  router.post("/user/album/", album.findByUser);
-
   router.post("/auth/login", auth.login);
   router.post("/auth/register", auth.register);
   router.post("/auth/forget-password", auth.forgetPassword);
   router.post("/auth/reset-password", auth.resetPassword);
 
-  router.post("/commande", commande.create);
-  router.get("/commandes", commande.findAll);
-  router.get("/commande/:id", commande.findOne);
-  router.delete("/commande/:id", commande.delete);
-  router.post("/user/commande/", commande.findByUser);
-  router.put("/commande/:id", commande.update);
-
-  router.get("/orders", order.findAll);
-  router.get("/order/:id", order.findOne);
-  router.delete("/order/:id", order.delete);
-  router.post("/user/order/", order.findByUser);
-  router.put("/order/:id", order.update);
-
   router.post("/disponibilite/create/", requireSignin, disponibilite.create);
   router.post("/disponibilite/delete/", requireSignin, disponibilite.remove);
   router.post("/user/disponibilite/", requireSignin, disponibilite.findByUser);
-
-  router.post("/facture", facture.create);
-  router.post("/pro/facture/", facture.findByUser);
-  router.post("/customer/facture/", facture.findByCustomer);
-
-  router.post("/commentaire", commentaire.create);
-  router.post("/commentaires", commentaire.findAll);
-  router.delete("/commentaire/:id", commentaire.delete);
-
 
   router.post("/product", product.create);
   router.get("/product", product.findAll);
@@ -84,23 +40,20 @@ module.exports = (app) => {
   router.get("/product/:id", product.findOne);
   router.delete("/product/:id", product.delete);
 
-  router.post("/rdv", rdv.create);
-  router.post("/pro/rdv/", rdv.findByUser);
-  router.post("/customer/rdv/", rdv.findByCustomer);
-
   router.post("/service/create", service.create);
   router.post("/service/delete", requireSignin, service.remove);
   router.post("/user/service", requireSignin, service.findByUser);
 
+  router.post("/search/user/city", search.findByCity);
+  router.post("/search/user/available", search.findByAvailable);
+  router.post("/search/user/service", search.findByService);
+
   router.post("/catalog/create", catalog.create);
-  // router.post("/catalog/create", upload.single('file'), catalog.create);
-  // router.post("/catalog/create", formidable(), catalog.create);
   router.post("/catalog/delete", requireSignin, catalog.remove);
   router.post("/user/catalog", requireSignin, catalog.findByUser);
-  router.get("/catalog/image/:catalogId", catalog.image);
 
   router.get("/user/:id", requireSignin, user.findOne);
-  router.put("/user/:id", requireSignin, user.update);
+  router.post("/user/update", requireSignin, user.update);
 
   // router.post("/user", user.findbyProfil);
   // router.post("/user/search", user.search);
