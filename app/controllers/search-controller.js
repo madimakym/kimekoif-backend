@@ -53,9 +53,22 @@ export const findByService = async (req, res) => {
                 model: "User",
             },
         }]);
+        var items = [];
+        service.forEach((child) => {
+            items.push({
+                id: child.user['_id'],
+                libelle: child.libelle,
+                price: child.price,
+                firstname: child.user['firstname'],
+                lastname: child.user['lastname'],
+                city: child.user['ville'],
+                avatar: child.user['avatar'],
+                mobilite: child.user['mobilite'],
+            });
+        });
         return res.json({
             success: true,
-            result: service
+            result: items
         });
     } catch (error) {
         return res.status(500).json({

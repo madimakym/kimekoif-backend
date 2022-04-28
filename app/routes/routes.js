@@ -42,7 +42,7 @@ module.exports = (app) => {
 
   router.post("/service/create", service.create);
   router.post("/service/delete", requireSignin, service.remove);
-  router.post("/user/service", requireSignin, service.findByUser);
+  router.post("/user/service", service.findByUser);
 
   router.post("/search/user/city", search.findByCity);
   router.post("/search/user/available", search.findByAvailable);
@@ -50,7 +50,7 @@ module.exports = (app) => {
 
   router.post("/catalog/create", catalog.create);
   router.post("/catalog/delete", requireSignin, catalog.remove);
-  router.post("/user/catalog", requireSignin, catalog.findByUser);
+  router.post("/user/catalog", catalog.findByUser);
 
   router.get("/user/:id", requireSignin, user.findOne);
   router.post("/user/update", requireSignin, user.update);
