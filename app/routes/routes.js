@@ -1,25 +1,20 @@
 import { requireSignin } from "../middlewares";
 
 module.exports = (app) => {
-  const adresse = require("../controllers/adresseController");
-  const album = require("../controllers/albumController");
+  const appointment = require("../controllers/appointment-controller");
   const auth = require("../controllers/auth-controller");
-  const commande = require("../controllers/commande-controller");
   const catalog = require("../controllers/catalog-controller");
   const commentaire = require("../controllers/commentaire-controller");
   const checkout = require("../controllers/checkoutController");
   const disponibilite = require("../controllers/disponibilite-controller");
   const facture = require("../controllers/factureController");
   const product = require("../controllers/product-controller");
-  const rdv = require("../controllers/rdvController");
   const service = require("../controllers/service-controller");
   const user = require("../controllers/user-controller");
   const search = require("../controllers/search-controller");
-  // const upload = require("../controllers/uploadfileController");
   const wish = require("../controllers/wish-controller");
   const stripe = require("../controllers/stripe-controller");
   const mailchimp = require("../controllers/mailchimp-controller");
-  const order = require("../controllers/order-controller");
   const mail = require("../controllers/send-mail-controller");
 
   var router = require("express").Router();
@@ -47,6 +42,10 @@ module.exports = (app) => {
   router.post("/search/user/city", search.findByCity);
   router.post("/search/user/available", search.findByAvailable);
   router.post("/search/user/service", search.findByService);
+
+  router.post("/appointment/create", requireSignin, appointment.create);
+  router.post("/appointment/delete", requireSignin, appointment.remove);
+  router.post("/user/appointment", requireSignin, appointment.findByUser);
 
   router.post("/catalog/create", catalog.create);
   router.post("/catalog/delete", requireSignin, catalog.remove);
