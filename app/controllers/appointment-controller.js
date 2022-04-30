@@ -4,14 +4,15 @@ var _ = require('lodash');
 export const create = async (req, res) => {
     const body = req.body
     try {
-        const service = new Appointment({
-            service: body.serviceId,
+        const appointment = new Appointment({
+            libelle: body.libelle,
+            price: body.price,
             professional: body.professionalId,
             customer: body.customerId,
             date: body.date,
-            status: true
+            status: "paid"
         });
-        await service.save()
+        await appointment.save()
         return res.status(200).json({
             success: true,
             message: "RDV ajouté",
@@ -34,30 +35,23 @@ export const findByUser = async (req, res) => {
             {
                 professional: body.professionalId
             }],
-        }).populate([{
-            path: "service",
-            select: ['libelle', 'price'],
-            populate: {
-                path: "service",
-                model: "Service",
-            }
-        },
-        {
-            path: "customer",
-            select: ['firstname', 'lastname'],
-            populate: {
+        }).populate([
+            {
                 path: "customer",
-                model: "User",
+                select: ['firstname', 'lastname'],
+                populate: {
+                    path: "customer",
+                    model: "User",
+                },
             },
-        },
-        {
-            path: "professional",
-            select: ['firstname', 'lastname'],
-            populate: {
+            {
                 path: "professional",
-                model: "User",
+                select: ['firstname', 'lastname'],
+                populate: {
+                    path: "professional",
+                    model: "User",
+                },
             },
-        },
         ]);
         return res.status(200).json(appointment);
     } catch (error) {

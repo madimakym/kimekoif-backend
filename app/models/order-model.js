@@ -1,32 +1,31 @@
-const mongoose = require("mongoose");
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+import mongoose from "mongoose"
+const { Schema } = mongoose
 
-const OrderSchema = new mongoose.Schema({
-  service: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Service"
-  },
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Users"
-  },
-  hairdresser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Users"
-  },
-  payment_id: {
+const OrderSchema = new Schema({
+  orderNumber: {
     type: String,
   },
-  payment_status: {
+  libelle: {
+    type: String,
+  },
+  price: {
+    type: String,
+  },
+  quantity: {
+    type: String,
+  },
+  date: {
     type: String,
   },
   status: {
-    type: Boolean,
+    type: Boolean
   }
-}, {
-  timestamps: true
+},
+  { timestamps: true }
+);
+OrderSchema.method("toJSON", function () {
+  const { __v, _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
 });
-OrderSchema.plugin(AutoIncrement, {
-  inc_field: 'orderId'
-});
-module.exports = mongoose.model("Order", OrderSchema);
+export default mongoose.model('Order', OrderSchema);
