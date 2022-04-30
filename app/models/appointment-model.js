@@ -1,18 +1,18 @@
 import mongoose from "mongoose"
 const { Schema } = mongoose
 
-const appointmentSchema = new Schema({
+const AppointmentSchema = new Schema({
     service: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service'
     },
     professional: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
+        ref: "User"
     },
     customer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
+        ref: "User"
     },
     date: {
         type: String,
@@ -23,5 +23,9 @@ const appointmentSchema = new Schema({
 },
     { timestamps: true }
 );
-
-export default mongoose.model('Appointment', appointmentSchema);
+AppointmentSchema.method("toJSON", function () {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+  });
+export default mongoose.model('Appointment', AppointmentSchema);

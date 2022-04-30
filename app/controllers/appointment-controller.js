@@ -27,27 +27,39 @@ export const create = async (req, res) => {
 export const findByUser = async (req, res) => {
     const body = req.body
     try {
-        await Appointment.find({
+        const appointment = await Appointment.find({
             $or: [{
                 customer: body.customerId
-            }],
-        }).sort({ createdAt: "desc" }).populate([
-            {
-                path: "professional",
-                populate: {
-                    path: "professional",
-                    model: "User",
-                },
             },
             {
-                path: "customer",
-                populate: {
-                    path: "customer",
-                    model: "User",
-                },
+                professional: body.professionalId
+            }],
+        }).populate([{
+            path: "service",
+            select: ['libelle', 'price'],
+            populate: {
+                path: "service",
+                model: "Service",
             }
+        },
+        {
+            path: "customer",
+            select: ['firstname', 'lastname'],
+            populate: {
+                path: "customer",
+                model: "User",
+            },
+        },
+        {
+            path: "professional",
+            select: ['firstname', 'lastname'],
+            populate: {
+                path: "professional",
+                model: "User",
+            },
+        },
         ]);
-        return res.status(200).json(user);
+        return res.status(200).json(appointment);
     } catch (error) {
         return res.status(500).json({
             status: 500,
