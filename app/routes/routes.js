@@ -4,10 +4,8 @@ module.exports = (app) => {
   const appointment = require("../controllers/appointment-controller");
   const auth = require("../controllers/auth-controller");
   const catalog = require("../controllers/catalog-controller");
-  const commentaire = require("../controllers/commentaire-controller");
-  const checkout = require("../controllers/checkoutController");
   const disponibilite = require("../controllers/disponibilite-controller");
-  const facture = require("../controllers/factureController");
+  const order = require("../controllers/order-controller");
   const product = require("../controllers/product-controller");
   const service = require("../controllers/service-controller");
   const user = require("../controllers/user-controller");
@@ -38,6 +36,11 @@ module.exports = (app) => {
   router.post("/service/create", service.create);
   router.post("/service/delete", requireSignin, service.remove);
   router.post("/user/service", service.findByUser);
+
+
+  router.post("/order/create", requireSignin, order.create);
+  router.post("/order/delete", requireSignin, order.remove);
+  router.post("/user/order", order.findByUser);
 
   router.post("/search/user/city", search.findByCity);
   router.post("/search/user/available", search.findByAvailable);

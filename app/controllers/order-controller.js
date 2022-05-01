@@ -1,133 +1,71 @@
-const Order = require("../models/order-model");
-const User = require("../models/user-model");
+import Order from "../models/order-model";
+var _ = require('lodash');
 
-const OrderCtrl = {
-    findAll: async (_req, res) => {
-        try {
-            const response = await Order.find().sort({
-                createdAt: "desc"
-            }).populate([
-                {
-                    path: "service",
-                    select: ['libelle', 'price'],
-                    populate: {
-                        path: "service",
-                        model: "Service",
-                    },
-                },
-            ]);
-            return res.status(200).json(response);
-        } catch (error) {
-            return res.status(500).json({
-                status: 500,
-                message: error.message,
-            });
-        }
-    },
+const orderNumberGenerate = () => {
+    let now = Date.now().toString()
+    now += now + Math.floor(Math.random() * 10)
+    return [now.slice(0, 4), now.slice(4, 10), now.slice(10, 14)].join('-')
+}
 
-    findByUser: async (req, res) => {
-        const body = req.body
-        try {
-            const user = await Order.find({
-                $or: [
-                    { customer: body.id },
-                    { hairdresser: body.id }
-                ],
-            }).sort({ createdAt: "desc" }).populate([
-                {
-                    path: "service",
-                    select: ['libelle', 'price'],
-                    populate: {
-                        path: "service",
-                        model: "Service",
-                    },
-                },
-                {
-                    path: "customer",
-                    select: ['id', 'firstname', 'lastname', 'profil'],
-                    populate: {
-                        path: "customer",
-                        model: "Users",
-                    },
-                },
-                {
-                    path: "hairdresser",
-                    select: ['id', 'firstname', 'lastname', 'profil'],
-                    populate: {
-                        path: "hairdresser",
-                        model: "Users",
-                    },
-                }
-            ]);
-            return res.status(200).json(user);
-        } catch (error) {
-            return res.status(500).json({
-                status: 500,
-                message: "Aucun resultat"
-            });
-        }
-    },
-
-    findOne: async (req, res) => {
-        try {
-            const id = req.params.id;
-            const response = await Order.findById(id).populate([{
-                path: "customer",
-                select: ['firstname', 'lastname', 'email', 'phone'],
-                populate: {
-                    path: "customer",
-                    model: "Users",
-                },
-            },
-            {
-                path: "hairdresser",
-                select: ['firstname', 'lastname', 'email', 'phone'],
-                populate: {
-                    path: "hairdresser",
-                    model: "Users",
-                },
-            }
-            ]);;
-            return res.status(200).json(response);
-        } catch (error) {
-            return res.status(500).json({
-                status: 500,
-                message: error.message,
-            });
-        }
-    },
-
-    delete: async (req, res) => {
-        const id = req.params.id;
-        try {
-            await Order.findByIdAndRemove(id);
-            return res.status(200).json({
-                status: 200,
-                message: "Date supprimée",
-            });
-        } catch (error) {
-            return res.status(500).json({
-                message: error.message
-            });
-        }
-    },
-
-    update: async (req, res) => {
-        try {
-            const id = req.params.id;
-            await Order.findByIdAndUpdate(id, req.body, {
-                useFindAndModify: false
-            })
-            return res.status(200).json({
-                status: 200,
-                message: "Order modifiée"
-            })
-        } catch (err) {
-            return res.status(500).json({
-                status: 500,
-                message: err.message,
-            });
-        }
-    },
+export const create = async (req, res) => {
+    const body = req.body
+    try {
+        const order = new Order({
+            orderNumber: orderNumberGenerate(),
+            products: body.products,
+            price: body.price,
+            user: body.user,
+            status: true
+        });
+        console.log("order ====>", order);
+        // await order.save()
+        return res.status(200).json({
+            success: true,
+            message: "Commande ajoutée",
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+    }
 };
-module.exports = OrderCtrl;
+
+export const findByUser = async (req, res) => {
+    const body = req.body
+    try {
+        const user = await Order.find({
+            $or: [{
+                user: body.user
+            }],
+        }).sort({ createdAt: "desc" }).populate([{
+            path: "user",
+            populate: {
+                path: "user",
+                model: "User",
+            },
+        }]);
+        return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: "Aucun resultat"
+        });
+    }
+};
+
+export const remove = async (req, res) => {
+    const { id } = req.body
+    try {
+        await Order.findByIdAndRemove(id);
+        return res.status(200).json({
+            status: 200,
+            message: "Order supprimé",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: error.message,
+        });
+    }
+};

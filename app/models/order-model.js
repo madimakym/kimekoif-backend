@@ -5,9 +5,7 @@ const OrderSchema = new Schema({
   orderNumber: {
     type: String,
   },
-  libelle: {
-    type: String,
-  },
+  products: [],
   price: {
     type: String,
   },
@@ -16,6 +14,10 @@ const OrderSchema = new Schema({
   },
   date: {
     type: String,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   },
   status: {
     type: Boolean
