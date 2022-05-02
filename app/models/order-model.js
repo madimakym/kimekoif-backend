@@ -5,6 +5,21 @@ const OrderSchema = new Schema({
   orderNumber: {
     type: String,
   },
+  firstname: {
+    type: String,
+  },
+  lastname: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  addressDelivery: {
+    type: String,
+  },
   products: [],
   price: {
     type: String,

@@ -13,15 +13,19 @@ export const create = async (req, res) => {
         const order = new Order({
             orderNumber: orderNumberGenerate(),
             products: body.products,
+            firstname: body.firstname,
+            lastname: body.lastname,
+            email: body.email,
+            phone: body.phone,
+            deliveryAddress: body.deliveryAddress,
             price: body.price,
             user: body.user,
             status: true
         });
-        console.log("order ====>", order);
-        // await order.save()
+        const orderSave = await order.save()
         return res.status(200).json({
             success: true,
-            message: "Commande ajoutée",
+            message: "MERCI! Votre commande N°" + orderSave.orderNumber + " a été enregistrée. Un e-mail de confirmation devrait vous parvenir dans les prochaines 24h. ",
         })
     } catch (err) {
         return res.status(500).json({
