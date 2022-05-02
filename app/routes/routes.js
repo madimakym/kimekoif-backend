@@ -4,6 +4,7 @@ module.exports = (app) => {
   const appointment = require("../controllers/appointment-controller");
   const auth = require("../controllers/auth-controller");
   const catalog = require("../controllers/catalog-controller");
+  const checkout = require("../controllers/checkout-controller");
   const disponibilite = require("../controllers/disponibilite-controller");
   const order = require("../controllers/order-controller");
   const product = require("../controllers/product-controller");
@@ -23,6 +24,16 @@ module.exports = (app) => {
   router.post("/auth/forget-password", auth.forgetPassword);
   router.post("/auth/reset-password", auth.resetPassword);
 
+  router.post("/appointment/create", requireSignin, appointment.create);
+  router.post("/appointment/delete", requireSignin, appointment.remove);
+  router.post("/user/appointment", requireSignin, appointment.findByUser);
+
+  router.post("/catalog/create", catalog.create);
+  router.post("/catalog/delete", requireSignin, catalog.remove);
+  router.post("/user/catalog", catalog.findByUser);
+
+  router.post("/stripe/charge/", checkout.payment);
+
   router.post("/disponibilite/create/", requireSignin, disponibilite.create);
   router.post("/disponibilite/delete/", requireSignin, disponibilite.remove);
   router.post("/user/disponibilite/", requireSignin, disponibilite.findByUser);
@@ -37,22 +48,13 @@ module.exports = (app) => {
   router.post("/service/delete", requireSignin, service.remove);
   router.post("/user/service", service.findByUser);
 
-
-  router.post("/order/create", requireSignin, order.create);
+  router.post("/order/create", order.create);
   router.post("/order/delete", requireSignin, order.remove);
-  router.post("/user/order", order.findByUser);
+  router.post("/user/order", requireSignin, order.findByUser);
 
   router.post("/search/user/city", search.findByCity);
   router.post("/search/user/available", search.findByAvailable);
   router.post("/search/user/service", search.findByService);
-
-  router.post("/appointment/create", requireSignin, appointment.create);
-  router.post("/appointment/delete", requireSignin, appointment.remove);
-  router.post("/user/appointment", requireSignin, appointment.findByUser);
-
-  router.post("/catalog/create", catalog.create);
-  router.post("/catalog/delete", requireSignin, catalog.remove);
-  router.post("/user/catalog", catalog.findByUser);
 
   router.get("/user/:id", requireSignin, user.findOne);
   router.post("/user/update", requireSignin, user.update);
