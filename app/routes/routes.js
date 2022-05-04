@@ -47,6 +47,8 @@ module.exports = (app) => {
   router.post("/service/create", service.create);
   router.post("/service/delete", requireSignin, service.remove);
   router.post("/user/service", service.findByUser);
+  router.get("/service/user/:id", service.findByUser);
+
 
   router.post("/order/create", order.create);
   router.post("/order/delete", requireSignin, order.remove);

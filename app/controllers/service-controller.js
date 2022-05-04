@@ -24,11 +24,11 @@ export const create = async (req, res) => {
 };
 
 export const findByUser = async (req, res) => {
-    const body = req.body
+    const id = req.params.id;
     try {
         const user = await Service.find({
             $or: [{
-                user: body.user
+                user: id
             }],
         }).sort({ createdAt: "desc" }).populate([{
             path: "user",
@@ -45,6 +45,29 @@ export const findByUser = async (req, res) => {
         });
     }
 };
+
+// export const findByUser = async (req, res) => {
+//     const body = req.body
+//     try {
+//         const user = await Service.find({
+//             $or: [{
+//                 user: body.user
+//             }],
+//         }).sort({ createdAt: "desc" }).populate([{
+//             path: "user",
+//             populate: {
+//                 path: "user",
+//                 model: "User",
+//             },
+//         }]);
+//         return res.status(200).json(user);
+//     } catch (error) {
+//         return res.status(500).json({
+//             status: 500,
+//             message: "Aucun resultat"
+//         });
+//     }
+// };
 
 export const remove = async (req, res) => {
     const { id } = req.body
